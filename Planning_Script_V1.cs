@@ -24,8 +24,8 @@ using System.Windows.Forms;
 
 // TODO: uncomment the line below if the script requires write access.
 [assembly: ESAPIScript(IsWriteable = true)]
-[assembly: AssemblyVersion("1.0.0.2")]
-[assembly: AssemblyFileVersion("1.0.0.2")]
+[assembly: AssemblyVersion("1.0.0.13")]
+[assembly: AssemblyFileVersion("1.0.0.13")]
 [assembly: AssemblyInformationalVersion("1.0")]
 
 
@@ -53,12 +53,13 @@ namespace VMS.TPS
             window.Content = MainControl;//le doy propiedades
             window.Width = MainControl.Width;
             window.Height = MainControl.Height;
-            window.Title = "Structure Script";
+            window.Title = "PLANNING SCRIPT Vs 1.0";
             MainControl.Patients.Content = context.Patient.Name;
             MainControl.ID.Content = context.Patient.Id;
             MainControl.StructSet.Content = context.StructureSet.Id;
             MainControl.ss = ss;//transfiere el paciente actual
             MainControl.sc = context;
+            
 
 
             List<Planning_Creation> dqm = Planning_Creation.Script();//lamo a la clase y la inicializo como es una lista 

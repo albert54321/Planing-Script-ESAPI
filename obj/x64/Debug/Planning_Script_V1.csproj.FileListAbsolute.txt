@@ -11,3 +11,5 @@ W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Pla
 W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V1.csproj.CoreCompileInputs.cache
 W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V1.esapi.dll
 W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V1.esapi.pdb
+W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\WindowMessageBar.g.cs
+W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\WindowMessageBar.baml

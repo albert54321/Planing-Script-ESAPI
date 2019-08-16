@@ -66,7 +66,7 @@
         </StackPanel>
         <Label Content="Planning Script:" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#FFF8F8F9" FontSize="14" Margin="337,31,-306,0" Height="31" RenderTransformOrigin="20.476,0.742" Width="150"/>
         <!--<DataGrid Name="dg_index" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="401,10,-541,-166" Height="156" Background="#FFF7F7FB" Width="161"></DataGrid>-->
-        <StackPanel Margin="23,305,-113,-210" Orientation="Horizontal" RenderTransformOrigin="0.5,0.5">
+        <StackPanel Name="credits" Margin="23,305,-113,-210" Orientation="Horizontal" RenderTransformOrigin="0.5,0.5">
             <Button Content="Credits" Width="94"  HorizontalAlignment="Center" Margin="0,27,0,57" Click="Button_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -77,6 +77,8 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
+            <ProgressBar x:Name="pbs" Minimum="0" Maximum="100"  Width="300" Height="30"  VerticalAlignment="Bottom"   Margin="-100,110,20,7" ValueChanged="Pbs_ValueChanged" LargeChange="0"/>
+            <TextBlock Name="pbs1" Text="{Binding ElementName=pbs, Path=Value, StringFormat={}{0:0}%}" VerticalAlignment="Center" Margin="-200,110,20,7"/>
         </StackPanel>
         <StackPanel Margin="337,330,-491,-181" Orientation="Horizontal" RenderTransformOrigin="0.457,0.532">
             <StackPanel.Background>

@@ -29,8 +29,6 @@ namespace Planning_Script_V1
             InitializeComponent();
             //Combo.DrawMode = DrawMode.OwnerDrawVariable;
             //string selected = Combo.SelectedItem.ToString();
-
-
         }
         public StructureSet ss;
         public ScriptContext sc;
@@ -45,7 +43,7 @@ namespace Planning_Script_V1
                 if (x.ID == Select_1.Content.ToString()) xapply.start(x.number, sc, x.approved);
             }
 
-            System.Windows.MessageBox.Show("Process Ending ");
+            System.Windows.MessageBox.Show("Enjoy your new automatic plan");
         }
 
         public void close_button(object sender, RoutedEventArgs e)
@@ -56,7 +54,6 @@ namespace Planning_Script_V1
         private void Combo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Select_1.Content = Combo_planing.SelectedItem.ToString();//coloca en el boton de select el valor de lo escogido
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -100,8 +97,9 @@ namespace Planning_Script_V1
                 b += 1;
             }
         }
-
-
-
+        private void Pbs_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            
+        }
     }
 }

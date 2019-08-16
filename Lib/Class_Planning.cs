@@ -22,6 +22,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
+using Planning_Script_V1;
 /**
 * @author $AlbertoAlarcon$
 *
@@ -235,7 +236,7 @@ namespace VMS.TPS//tiene que ser igual que el main
             VMAT.ApplyParameters(beampar);
         }
 
-        public ExternalPlanSetup settingPlan(int machine, Patient patient, StructureSet sset, double RxDose, int NFractions, Structure ptv_total, string[] setting_names, Double[] setting_arc, int arc_number = 1)
+        public ExternalPlanSetup settingPlan(int machine, Patient patient, StructureSet sset, double RxDose, int NFractions, Structure ptv_total, string[] setting_names, Double[] setting_arc, int arc_number = 1,double c=0)
         {
             patient.BeginModifications();   // enable writing with this script.
             IEnumerable<Course> sss = patient.Courses;//lista de cursos
@@ -261,7 +262,7 @@ namespace VMS.TPS//tiene que ser igual que el main
             cureps.SetCalculationOption("AAA_15151", "HeterogeneityCorrection", "ON");
             cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), 1.0);//prescription 0.99=99 %tratamiento sip
             //esto da en mm
-            VVector isocenter = new VVector(RedondeoArriba(Math.Round(ptv_total.CenterPoint.x, 0) / 10.0), RedondeoArriba(Math.Round(ptv_total.CenterPoint.y, 0) / 10.0), RedondeoArriba(Math.Round(ptv_total.CenterPoint.z, 0) / 10.0));
+            VVector isocenter = new VVector(RedondeoArriba(Math.Round(ptv_total.CenterPoint.x, 0) / 10.0), RedondeoArriba(Math.Round(ptv_total.CenterPoint.y, 0) / 10.0), RedondeoArriba(Math.Round(ptv_total.CenterPoint.z+c, 0) / 10.0));//c es la ctte para prostata para bajar el iso
             ExternalBeamMachineParameters ebmp; //esto lo inicializo antes para poder elegir maquina
             if (machine == 0)
             {
@@ -482,9 +483,9 @@ namespace VMS.TPS//tiene que ser igual que el main
                 }
                 else if (select == 2)
                 {
-                    cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID20[0]), OptimizationObjectiveOperator.Upper, new DoseValue(43, "Gy"), 0, 40);
-                    cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID20[0]), OptimizationObjectiveOperator.Lower, new DoseValue(38, "Gy"), 100, 120);
-                    cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID20[0]), OptimizationObjectiveOperator.Lower, new DoseValue(40, "Gy"), 98, 100);
+                    cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID20_[0]), OptimizationObjectiveOperator.Upper, new DoseValue(43, "Gy"), 0, 40);
+                    cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID20_[0]), OptimizationObjectiveOperator.Lower, new DoseValue(38, "Gy"), 100, 120);
+                    cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID20_[0]), OptimizationObjectiveOperator.Lower, new DoseValue(40, "Gy"), 98, 100);
                     cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID17[0]), OptimizationObjectiveOperator.Upper, new DoseValue(43, "Gy"), 0, 40);
                     cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(x => x.Id == PTV_ID17[0]), OptimizationObjectiveOperator.Lower, new DoseValue(40, "Gy"), 100, 120);
                     //oars
@@ -520,9 +521,9 @@ namespace VMS.TPS//tiene que ser igual que el main
                 }
                 else if (select == 3)
                 {
-                    cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID20[0]), OptimizationObjectiveOperator.Upper, new DoseValue(43, "Gy"), 0, 50);
-                    cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID20[0]), OptimizationObjectiveOperator.Lower, new DoseValue(38, "Gy"), 100, 120);
-                    cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID20[0]), OptimizationObjectiveOperator.Lower, new DoseValue(40, "Gy"), 98, 100);
+                    cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID20_[0]), OptimizationObjectiveOperator.Upper, new DoseValue(43, "Gy"), 0, 50);
+                    cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID20_[0]), OptimizationObjectiveOperator.Lower, new DoseValue(38, "Gy"), 100, 120);
+                    cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID20_[0]), OptimizationObjectiveOperator.Lower, new DoseValue(40, "Gy"), 98, 100);
                     cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID17[0]), OptimizationObjectiveOperator.Upper, new DoseValue(43, "Gy"), 0, 40);
                     cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(x => x.Id == PTV_ID17[0]), OptimizationObjectiveOperator.Lower, new DoseValue(40, "Gy"), 100, 120);
                     cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id == PTV_ID21[0]), OptimizationObjectiveOperator.Upper, new DoseValue(38, "Gy"), 0, 60);
@@ -774,12 +775,25 @@ namespace VMS.TPS//tiene que ser igual que el main
             bool is_rapidplan = true;
             SetDictionaries_Prost(out DVH_struct, out DVH_dose, cureps, PTVs_names, RxDose, is_rapidplan);//aqu queda los diccionarios de rapidplan
             cureps.OptimizationSetup.AddAutomaticNormalTissueObjective(100.0f); //anade normal tissio automatico
-            foreach (Structure x in st_oar)
-            {
-                try
+            int Colon_priority = 150;
+            int Bowel_priority = 190;
+            try
                 {
                     var run_DVH = cureps.CalculateDVHEstimates(rapidplan[select], DVH_dose, DVH_struct);//ID DEL MODELO // DOSIS /MATCH STRUCTURA
-                    System.Windows.MessageBox.Show(run_DVH.Success.ToString());
+//                    System.Windows.MessageBox.Show(run_DVH.Success.ToString());
+                    if (st_oar.Any(x => x.Id == "Colon"))
+                    {
+                        cureps.OptimizationSetup.AddPointObjective(st_oar.FirstOrDefault(x => x.Id == "Colon"), OptimizationObjectiveOperator.Upper, new DoseValue(34.5, "Gy"), 0, Colon_priority);
+                        cureps.OptimizationSetup.AddPointObjective(st_oar.FirstOrDefault(x => x.Id == "Colon"), OptimizationObjectiveOperator.Upper, new DoseValue(24.5, "Gy"), 10, Colon_priority - 60);
+                        cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id.Contains("Colon_PRV")), OptimizationObjectiveOperator.Upper, new DoseValue(37, "Gy"), 10, Colon_priority - 110);
+                    }
+
+                    if (st_oar.Any(x => x.Id == "Bowel"))
+                    {
+                        cureps.OptimizationSetup.AddPointObjective(st_oar.FirstOrDefault(x => x.Id == "Bowel"), OptimizationObjectiveOperator.Upper, new DoseValue(24.5, "Gy"), 0, Bowel_priority);
+                        cureps.OptimizationSetup.AddPointObjective(st_oar.FirstOrDefault(x => x.Id == "Bowel"), OptimizationObjectiveOperator.Upper, new DoseValue(19.5, "Gy"), 10, Bowel_priority - 40);
+                        cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id.Contains("Bowel_PRV")), OptimizationObjectiveOperator.Upper, new DoseValue(27, "Gy"), 10, Bowel_priority - 110);
+                    }
                     opti_cureps(cureps);//calcula lo elemenal y la dosis    
                 }
                 catch (Exception e)
@@ -810,43 +824,35 @@ namespace VMS.TPS//tiene que ser igual que el main
                     {
                         SetDictionaries_Prost(out DVH_struct, out DVH_dose, cureps, PTVs_names, RxDose, is_rapidplan, select);//aqu queda los diccionarios de rapidplan
                     }
-                    foreach (KeyValuePair<string, string> t in DVH_struct)
+                    if (st_oar.Any(x => x.Id == "Colon") )
                     {
-                        //textBox3.Text += ("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
-                        System.Windows.MessageBox.Show(string.Format("Key = {0}, Value = {1},NO RAPIDPLAN", t.Key, t.Value));
+                        cureps.OptimizationSetup.AddPointObjective(st_oar.FirstOrDefault(x => x.Id == "Colon"), OptimizationObjectiveOperator.Upper, new DoseValue(34.5, "Gy"), 0, Colon_priority);
+                        cureps.OptimizationSetup.AddPointObjective(st_oar.FirstOrDefault(x => x.Id == "Colon"), OptimizationObjectiveOperator.Upper, new DoseValue(24.5, "Gy"), 10, Colon_priority - 60);
+                        cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id.Contains("Colon_PRV")), OptimizationObjectiveOperator.Upper, new DoseValue(37, "Gy"), 10, Colon_priority - 110);
                     }
-                    opti_cureps(cureps);//calcula lo elemental y la dosis    
-                }
-                if (x.Id.Contains("Colon"))
-                {
-                    int priority = 150;
-                    DoseValue colonDose = cureps.GetDoseAtVolume(x, 0, VolumePresentation.AbsoluteCm3, DoseValuePresentation.Absolute);
 
-                    while (colonDose.Dose > 35.2)
+                    if (st_oar.Any(x => x.Id == "Bowel"))
                     {
-                        System.Windows.MessageBox.Show("Colon=" + colonDose.Dose.ToString(), "RP");
-                        priority = priority + 20;
-                        cureps.OptimizationSetup.AddPointObjective(x, OptimizationObjectiveOperator.Upper, new DoseValue(34.5, "Gy"), 0, priority);
-                        cureps.OptimizationSetup.AddPointObjective(x, OptimizationObjectiveOperator.Upper, new DoseValue(24.5, "Gy"), 10, priority - 50);
-                        cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id.Contains("Colon_PRV")), OptimizationObjectiveOperator.Upper, new DoseValue(37, "Gy"), 10, priority - 110);
-                        opti_cureps(cureps);//calcula lo elemenal y la dosis
+                        cureps.OptimizationSetup.AddPointObjective(st_oar.FirstOrDefault(x => x.Id == "Bowel"), OptimizationObjectiveOperator.Upper, new DoseValue(24.5, "Gy"), 0, Bowel_priority);
+                        cureps.OptimizationSetup.AddPointObjective(st_oar.FirstOrDefault(x => x.Id == "Bowel"), OptimizationObjectiveOperator.Upper, new DoseValue(19.5, "Gy"), 10, Bowel_priority - 40);
+                        cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id.Contains("Bowel_PRV")), OptimizationObjectiveOperator.Upper, new DoseValue(27, "Gy"), 10, Bowel_priority - 110);
                     }
-                }
-                if (x.Id.Contains("Bowel"))
+                            opti_cureps(cureps);//calcula lo elemental y la dosis    
+                    }
+
+                if ( st_oar.Any(x => x.Id == "Bowel"))
                 {
-                    int priority = 200;
-                    DoseValue bowelDose = cureps.GetDoseAtVolume(x, 0, VolumePresentation.AbsoluteCm3, DoseValuePresentation.Absolute);
+                    DoseValue colonDose = cureps.GetDoseAtVolume(st_oar.FirstOrDefault(x => x.Id == "Colon"), 0, VolumePresentation.AbsoluteCm3, DoseValuePresentation.Absolute);
+                    DoseValue bowelDose = cureps.GetDoseAtVolume(st_oar.FirstOrDefault(x => x.Id == "Bowel"), 0, VolumePresentation.AbsoluteCm3, DoseValuePresentation.Absolute);
                     while (bowelDose.Dose > 25.2)
                     {
-                        System.Windows.MessageBox.Show("bowel=" + bowelDose.Dose.ToString(), "RP");
-                        priority = priority + 20;
-                        cureps.OptimizationSetup.AddPointObjective(x, OptimizationObjectiveOperator.Upper, new DoseValue(24.5, "Gy"), 0, priority);
-                        cureps.OptimizationSetup.AddPointObjective(x, OptimizationObjectiveOperator.Upper, new DoseValue(19.5, "Gy"), 10, priority - 50);
-                        cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id.Contains("Bowel_PRV")), OptimizationObjectiveOperator.Upper, new DoseValue(27, "Gy"), 10, priority - 110);
+                        Bowel_priority = Bowel_priority + 40;
+                        cureps.OptimizationSetup.AddPointObjective(st_oar.FirstOrDefault(x => x.Id == "Bowel"), OptimizationObjectiveOperator.Upper, new DoseValue(24.5, "Gy"), 0, Bowel_priority);
+                        cureps.OptimizationSetup.AddPointObjective(st_oar.FirstOrDefault(x => x.Id == "Bowel"), OptimizationObjectiveOperator.Upper, new DoseValue(19.5, "Gy"), 10, Bowel_priority - 50);
+                        cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id.Contains("Bowel_PRV")), OptimizationObjectiveOperator.Upper, new DoseValue(27, "Gy"), 10, Bowel_priority - 110);
                         opti_cureps(cureps);//calcula lo elemenal y la dosis
                     }
                 }
-            }
         }
 
         public void Plan_Prostate_5Fx(ScriptContext context /*, System.Windows.Window window, ScriptEnvironment environment*/)
@@ -870,6 +876,7 @@ namespace VMS.TPS//tiene que ser igual que el main
             string[] PTV_ID17 = { "PTV-PRVs!" };
             string[] PTV_ID20 = { "PTV_High_3625" };
             string[] PTV_ID20_ = { "PTV_High_4000" };
+            
             string[] PTV_ID21 = { "PTV_Low_2500" };
             //string[] PTV_ID22 = { "PTV_Mid_2750" };
             string[] N_Colon = { "Colon", "colon", "sigma", "Grueso" };
@@ -893,10 +900,16 @@ namespace VMS.TPS//tiene que ser igual que el main
             /////////////////////////////////////////////////// Comienza la generacion de planes
             if (result == DialogResult.Yes && result1 == DialogResult.No)
             {
-                PTVs_names.Add(PTV_ID20); PTVs_names.Add(PTV_ID17);
-                    setting_names[1] = setting_names[1] + "36.25Gy";//rectum0 esto coloca el nombre mas 
-                    ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, 1);
-                    if (bowel == null && colon == null)//intestino
+                if (!ss.Structures.Any(x => x.Id == PTV_ID20[0]))
+                {
+                    System.Windows.MessageBox.Show(PTV_ID20[0]+" not found, script doesnt execute");
+                    return;
+                }
+                    PTVs_names.Add(PTV_ID20); PTVs_names.Add(PTV_ID17);
+                    setting_names[1] = setting_names[1] + "Prostata";//rectum0 esto coloca el nombre mas 
+                    ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, 1,-0.5);
+                
+                if (bowel == null && colon == null)//intestino
                     {
                         Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0);
                     }
@@ -919,17 +932,22 @@ namespace VMS.TPS//tiene que ser igual que el main
                         }
                     }
                     DoseValue normalization = cureps.GetDoseAtVolume(ptv_prvs, 98, VolumePresentation.Relative, DoseValuePresentation.Absolute);
-                System.Windows.MessageBox.Show(normalization.Dose.ToString() + " Rxdose=" + RxDose.ToString());
-                cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), normalization.Dose / (RxDose - 0.1));//prescription 0.99=99 %tratamiento sip
+                double normaliza = Convert.ToDouble(normalization.Dose)/RxDose;
+                cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), normaliza);//prescription 0.99=99 %tratamiento sip
             }
             else if (result == DialogResult.Yes && result1 == DialogResult.Yes)
             {
+                if (!ss.Structures.Any(x => x.Id == PTV_ID20[0]))
+                {
+                    System.Windows.MessageBox.Show(PTV_ID20[0] + " not found, script doesnt execute");
+                    return;
+                }
                 setting_arc = new Double[] { 30, 181, 179 };
                 PTVs_names.Add(PTV_ID20); PTVs_names.Add(PTV_ID17); PTVs_names.Add(PTV_ID21);//los nombres de los ptvs
                 
-                    setting_names[1] = setting_names[1] + "36.25/25";//rectum0
-                    ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, 2);
-                    if (bowel == null && colon == null)//intestino
+                    setting_names[1] = setting_names[1] + "Prost+GG";/////////
+                    ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, 2,-0.5);
+                if (bowel == null && colon == null)//intestino
                     {
                         Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 1);
                     }
@@ -952,53 +970,61 @@ namespace VMS.TPS//tiene que ser igual que el main
                         }
                     }
                     DoseValue normalization = cureps.GetDoseAtVolume(ptv_prvs, 98, VolumePresentation.Relative, DoseValuePresentation.Absolute);
-                System.Windows.MessageBox.Show(normalization.Dose.ToString() + " Rxdose=" + RxDose.ToString());
-                cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), (RxDose - 0.1) / normalization.Dose);//prescription 0.99=99 %tratamiento sip
-                
+                double normaliza = Convert.ToDouble(normalization.Dose) / RxDose;
+                cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), normaliza);//prescription 0.99=99 %tratamiento sip
             }
             else if (result == DialogResult.No && result1 == DialogResult.No)
             {
+                if (!ss.Structures.Any(x => x.Id == PTV_ID20_[0]))
+                {
+                    System.Windows.MessageBox.Show(PTV_ID20_[0] + " not found, script doesnt execute");
+                    return;
+                }
                 RxDose = 40.0;//dosis prescrita
                 PTVs_names.Add(PTV_ID20); PTVs_names.Add(PTV_ID17);
                 
-                    setting_names[1] = setting_names[1] +"40Gy";//rectum0
-                    ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, 1);
-                    if (bowel == null && colon == null)//intestino
+                    setting_names[1] = setting_names[1] + "Prostata";//rectum0
+                    ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, 1,-0.5);
+                if (bowel == null && colon == null)//intestino
                     {
-                        Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0);
+                        Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 2);
                     }
                     else
                     {
                         if (bowel != null && colon != null)
                         {
                             VIP_oar.Add(bowel); VIP_oar.Add(colon);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 0);
+                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 2);
                         }
                         else if (bowel != null)
                         {
                             VIP_oar.Add(bowel);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 0);
+                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 2);
                         }
                         else if (colon != null)
                         {
                             VIP_oar.Add(colon);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 0);
+                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 2);
                         }
                     }
                     DoseValue normalization = cureps.GetDoseAtVolume(ptv_prvs, 98, VolumePresentation.Relative, DoseValuePresentation.Absolute);
-                System.Windows.MessageBox.Show(normalization.Dose.ToString() + " Rxdose=" + RxDose.ToString());
-                cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), (RxDose - 0.1) / normalization.Dose);//prescription 0.99=99 %tratamiento sip
-                
+                double normaliza = Convert.ToDouble(normalization.Dose) / RxDose;
+                cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), normaliza);//prescription 0.99=99 %tratamiento sip                
             }
-            else if (result == DialogResult.Yes && result1 == DialogResult.Yes)
+            else if (result == DialogResult.No && result1 == DialogResult.Yes)
             {
+                if (!ss.Structures.Any(x => x.Id == PTV_ID20_[0]))
+                {
+                    System.Windows.MessageBox.Show(PTV_ID20_[0] + " not found, script doesnt execute");
+                    return;
+                }
                 RxDose = 40.0;
                 setting_arc = new Double[] { 30, 181, 179 };
                 PTVs_names.Add(PTV_ID20_); PTVs_names.Add(PTV_ID17); PTVs_names.Add(PTV_ID21);
 
-                    setting_names[1] = setting_names[1] + "40/25Gy";//rectum0
-                    ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, 2);
-                    if (bowel == null && colon == null)//intestino
+                    setting_names[1] = setting_names[1] + "Prost+GG";//rectum0
+                    ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, 2,-0.5);
+                if (bowel == null && colon == null)//intestino
                     {
                         Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 3);
                     }
@@ -1021,16 +1047,17 @@ namespace VMS.TPS//tiene que ser igual que el main
                         }
                     }
                     DoseValue normalization = cureps.GetDoseAtVolume(ptv_prvs, 98, VolumePresentation.Relative, DoseValuePresentation.Absolute);
-                System.Windows.MessageBox.Show(normalization.Dose.ToString()+" Rxdose="+RxDose.ToString());
-                cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), (RxDose - 0.1) / normalization.Dose);//prescription 0.99=99 %tratamiento sip
+                double normaliza = Convert.ToDouble(normalization.Dose) / RxDose;
+                cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), normaliza);//prescription 0.99=99 %tratamiento sip
             }
             //ps.AddReferencePoint(ptv_total, ps.Dose.DoseMax3DLocation, "Calculus", null);//coloca punto de referencia no se como hacer que sea 
-            System.Windows.MessageBox.Show("Enjoy your new automatic plan");
+            
         }
 
         public void Plan_Rectum_20Fx(ScriptContext context /*, System.Windows.Window window, ScriptEnvironment environment*/)
         {
-           /* Patient patient = context.Patient;
+
+            Patient patient = context.Patient;
             StructureSet ss = context.StructureSet;
             PlanSetup ps = context.PlanSetup;
 
@@ -1059,155 +1086,51 @@ namespace VMS.TPS//tiene que ser igual que el main
             /////////////////////////////////////////////////////////////////////////Prescripcion siempre es de 5 fraction
             double RxDose = 36.25;//por defecto esta en 36.25
             int NFractions = 5;
-            string[] setting_names = { "SBRT_Prostate", "RP_Prostate", "Field", "10X", "SRS ARC" };// 0=nombre del course y 1=del plan, 2=field, 3=energia, 4= srsarc o arc 5=rapidplan
-            string[] rapidplan = { "PROSTATA 3625 - SIN FILTRO", "PROSTATA 3625/2500 - SIN FILTRO", "PROSTATA 4000 - SIN FILTRO", "PROSTATA 4000/2500 - SIN FILTRO" };
-            Double[] setting_arc = { 10, 181, 179 };//por defecto esta en porstata simple 36.25
+            string[] setting_names = { "Recto", "Recto", "Field", "6X", "ARC" };// 0=nombre del course y 1=del plan, 2=field, 3=energia, 4= srsarc o arc 5=rapidplan
+            string[] rapidplan = { "RECTO_5400/4800" };
+            Double[] setting_arc = { 30, 181, 179 };//por
             int n_total = 1;
             /////////////////////////////////////////////////////////////////////////////
             //list de oars importantes
             List<Structure> VIP_oar = new List<Structure>();
             List<string[]> PTVs_names = new List<string[]>();//esto para pasar los nombres del ptvs que existen
             /////////////////////////////////////////////////// Comienza la generacion de planes
-            if (result == DialogResult.Yes && result1 == DialogResult.No)
+            /*if (!ss.Structures.Any(x => x.Id == PTV_ID20[0]))
             {
-                PTVs_names.Add(PTV_ID20); PTVs_names.Add(PTV_ID17);
+                System.Windows.MessageBox.Show(PTV_ID20[0] + " not found, script doesnt execute");
+                return;
+            }
+            PTVs_names.Add(PTV_ID20); PTVs_names.Add(PTV_ID17);
+            setting_names[1] = setting_names[1] + "36.25Gy";//rectum0 esto coloca el nombre mas 
+            ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, 1, -0.5);
 
-                for (int i = 1; i <= n_total; i++)
-                {
-                    setting_names[1] = setting_names[1] + i.ToString();//rectum0 esto coloca el nombre mas 
-                    ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, 1);
-                    if (bowel == null && colon == null)//intestino
-                    {
-                        Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0);
-                    }
-                    else
-                    {
-                        if (bowel != null && colon != null)
-                        {
-                            VIP_oar.Add(bowel); VIP_oar.Add(colon);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 0);
-                        }
-                        else if (bowel != null)
-                        {
-                            VIP_oar.Add(bowel);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 0);
-                        }
-                        else if (colon != null)
-                        {
-                            VIP_oar.Add(colon);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 0);
-                        }
-                    }
-                    DoseValue normalization = cureps.GetDoseAtVolume(ptv_prvs, 98, VolumePresentation.Relative, DoseValuePresentation.Absolute);
-                    System.Windows.MessageBox.Show(normalization.ToString());
-                    cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), normalization.Dose / (RxDose - 0.1));//prescription 0.99=99 %tratamiento sip
-                }
-            }
-            else if (result == DialogResult.Yes && result1 == DialogResult.Yes)
+            if (bowel == null && colon == null)//intestino
             {
-                setting_arc = new Double[] { 30, 181, 179 };
-                PTVs_names.Add(PTV_ID20); PTVs_names.Add(PTV_ID17); PTVs_names.Add(PTV_ID21);//los nombres de los ptvs
-                for (int i = 1; i <= n_total; i++)
-                {
-                    setting_names[1] = setting_names[1] + i.ToString();//rectum0
-                    ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, 2);
-                    if (bowel == null && colon == null)//intestino
-                    {
-                        Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 1);
-                    }
-                    else
-                    {
-                        if (bowel != null && colon != null)
-                        {
-                            VIP_oar.Add(bowel); VIP_oar.Add(colon);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 1);
-                        }
-                        else if (bowel != null)
-                        {
-                            VIP_oar.Add(bowel);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 1);
-                        }
-                        else if (colon != null)
-                        {
-                            VIP_oar.Add(colon);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 1);
-                        }
-                    }
-                    DoseValue normalization = cureps.GetDoseAtVolume(ptv_prvs, 98, VolumePresentation.Relative, DoseValuePresentation.Absolute);
-                    cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), (RxDose - 0.1) / normalization.Dose);//prescription 0.99=99 %tratamiento sip
-                }
+                Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0);
             }
-            else if (result == DialogResult.No && result1 == DialogResult.No)
+            else
             {
-                RxDose = 40.0;//dosis prescrita
-                PTVs_names.Add(PTV_ID20); PTVs_names.Add(PTV_ID17);
-                for (int i = 1; i <= n_total; i++)
+                if (bowel != null && colon != null)
                 {
-                    setting_names[1] = setting_names[1] + i.ToString();//rectum0
-                    ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, 1);
-                    if (bowel == null && colon == null)//intestino
-                    {
-                        Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0);
-                    }
-                    else
-                    {
-                        if (bowel != null && colon != null)
-                        {
-                            VIP_oar.Add(bowel); VIP_oar.Add(colon);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 0);
-                        }
-                        else if (bowel != null)
-                        {
-                            VIP_oar.Add(bowel);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 0);
-                        }
-                        else if (colon != null)
-                        {
-                            VIP_oar.Add(colon);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 0);
-                        }
-                    }
-                    DoseValue normalization = cureps.GetDoseAtVolume(ptv_prvs, 98, VolumePresentation.Relative, DoseValuePresentation.Absolute);
-                    cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), (RxDose - 0.1) / normalization.Dose);//prescription 0.99=99 %tratamiento sip
+                    VIP_oar.Add(bowel); VIP_oar.Add(colon);
+                    Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 0);
                 }
-            }
-            else if (result == DialogResult.Yes && result1 == DialogResult.Yes)
-            {
-                RxDose = 40.0;
-                setting_arc = new Double[] { 30, 181, 179 };
-                PTVs_names.Add(PTV_ID20_); PTVs_names.Add(PTV_ID17); PTVs_names.Add(PTV_ID21);
-                for (int i = 1; i <= n_total; i++)
+                else if (bowel != null)
                 {
-                    setting_names[1] = setting_names[1] + i.ToString();//rectum0
-                    ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, 2);
-                    if (bowel == null && colon == null)//intestino
-                    {
-                        Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 3);
-                    }
-                    else
-                    {
-                        if (bowel != null && colon != null)
-                        {
-                            VIP_oar.Add(bowel); VIP_oar.Add(colon);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 3);
-                        }
-                        else if (bowel != null)
-                        {
-                            VIP_oar.Add(bowel);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 3);
-                        }
-                        else if (colon != null)
-                        {
-                            VIP_oar.Add(colon);
-                            Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 3);
-                        }
-                    }
-                    DoseValue normalization = cureps.GetDoseAtVolume(ptv_prvs, 98, VolumePresentation.Relative, DoseValuePresentation.Absolute);
-                    cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), (RxDose - 0.1) / normalization.Dose);//prescription 0.99=99 %tratamiento sip
+                    VIP_oar.Add(bowel);
+                    Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 0);
                 }
-            }
-            //ps.AddReferencePoint(ptv_total, ps.Dose.DoseMax3DLocation, "Calculus", null);//coloca punto de referencia no se como hacer que sea 
-            System.Windows.MessageBox.Show("Enjoy your new automatic plan");*/
+                else if (colon != null)
+                {
+                    VIP_oar.Add(colon);
+                    Opti_Bow_Col(cureps, rapidplan, PTVs_names, RxDose, VIP_oar, 0);
+                }
+            
+            DoseValue normalization = cureps.GetDoseAtVolume(ptv_prvs, 98, VolumePresentation.Relative, DoseValuePresentation.Absolute);
+            double normaliza = Convert.ToDouble(normalization.Dose) / RxDose;
+            cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), normaliza);//prescription 0.99=99 %tratamiento sip
+        }
+            }*/
         }
     }
 }

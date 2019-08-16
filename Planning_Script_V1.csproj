@@ -65,6 +65,9 @@
     <Compile Include="WindowCredit.xaml.cs">
       <DependentUpon>WindowCredit.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WindowMessageBar.xaml.cs">
+      <DependentUpon>WindowMessageBar.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="UserScript.xaml">
@@ -75,8 +78,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="WindowMessageBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Lib\paciencia.jpg" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Lib\Institutozunino.PNG" />
   </ItemGroup>
