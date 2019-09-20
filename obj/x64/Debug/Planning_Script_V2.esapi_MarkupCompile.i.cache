@@ -1,4 +1,4 @@
-﻿Planning_Script_V1.esapi
+﻿Planning_Script_V2.esapi
 
 
 library
@@ -16,5 +16,5 @@ DEBUG;TRACE
 16-2103909265
 UserScript.xaml;WindowCredit.xaml;WindowMessageBar.xaml;
 
-True
+False
 

@@ -68,7 +68,7 @@ namespace Planning_Script_V1 {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Planning_Script_V1.esapi;component/windowmessagebar.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Planning_Script_V2.esapi;component/windowmessagebar.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\WindowMessageBar.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
