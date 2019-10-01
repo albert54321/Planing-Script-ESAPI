@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Planning_Script_V1"
         mc:Ignorable="d"
-        Height="496.596" Width="730.664">
+        Height="496.596" Width="761.786">
     <UserControl.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-            <GradientStop Color="#FF101E5D" Offset="0.307"/>
-            <GradientStop Color="#FF162D97" Offset="1"/>
+            <GradientStop Color="#FF2A2A2C" Offset="0.136"/>
+            <GradientStop Color="#FFA7A8AE" Offset="0.973"/>
         </LinearGradientBrush>
     </UserControl.Background>
     <Grid Margin="0,0,550,250">
@@ -32,7 +32,7 @@
             <Button x:Name="close" MinWidth="90" Margin="-100,200,0,0" VerticalAlignment="Top" Height="25" Content="Close" Click="close_button" Width="91" FontSize="12"/>
         </StackPanel>
 
-        <StackPanel Name="combo_box" Width="295" Height="142" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="337,66,-491,-34">
+        <StackPanel Name="combo_box" Width="314" Height="142" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="337,66,-439,0">
             <StackPanel.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -44,7 +44,7 @@
             <ComboBox x:Name="Combo_planing" SelectionChanged="Combo_SelectionChanged" Foreground="Blue" />
         </StackPanel>
 
-        <StackPanel Name="selected" Width="300" Height="91" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="337,231,-491,-161">
+        <StackPanel Name="selected" Width="314" Height="91" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="337,231,-439,-75">
             <StackPanel.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -57,12 +57,12 @@
                 </TransformGroup>
             </StackPanel.RenderTransform>
             <Label Content="Selected:" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#FFFBF7F7" FontSize="16"/>
-            <Label x:Name="Select_1" Content="*******************************************" VerticalAlignment="Top" HorizontalAlignment="Center" Height="25" Width="250" Foreground="#FF114A9C" FontSize="11" Background="#FFF7F2F2" Margin="30,0,27,0"/>
+            <Label x:Name="Select_1" Content="*******************************************" VerticalAlignment="Top" HorizontalAlignment="Center" Height="25" Width="264" Foreground="#FF114A9C" FontSize="11" Background="#FFF7F2F2" Margin="26,0,10,0"/>
         </StackPanel>
 
-        <StackPanel Margin="315,305,-520,-230" Orientation="Horizontal" RenderTransformOrigin="0.5,0.5">
+        <StackPanel Margin="315,305,-546,-230" Orientation="Horizontal" RenderTransformOrigin="0.5,0.5">
             <Label x:Name="Stat_Copy" Content="Created by MSc. Alberto Alarcón @2019" HorizontalAlignment="Left" Margin="50,0,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="14" Foreground="#FFFEFEFF" Width="264" RenderTransformOrigin="0.526,0.552"/>
-            <Label x:Name="Stat_Copy2" Content="Es responsabilidad del que utiliza este Plug-in de verificar el correcto funcionamiento." HorizontalAlignment="Left" Margin="-310,130,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="10" Foreground="#FFFEFEFF" Width="414" RenderTransformOrigin="0.526,0.552"/>
+            <Label x:Name="Stat_Copy2" Content="Es responsabilidad del que utiliza este Plug-in de verificar el correcto funcionamiento." HorizontalAlignment="Left" Margin="-310,130,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="10" Foreground="#FF09090A" Width="414" RenderTransformOrigin="0.526,0.552" FontWeight="Bold"/>
         </StackPanel>
         <Label Content="Planning Script:" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#FFF8F8F9" FontSize="14" Margin="337,31,-306,0" Height="31" RenderTransformOrigin="20.476,0.742" Width="150"/>
         <!--<DataGrid Name="dg_index" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="401,10,-541,-166" Height="156" Background="#FFF7F7FB" Width="161"></DataGrid>-->
@@ -77,10 +77,10 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <ProgressBar x:Name="pbs" Minimum="0" Maximum="100"  Width="300" Height="30"  VerticalAlignment="Bottom"   Margin="-100,110,20,7" ValueChanged="Pbs_ValueChanged" LargeChange="0"/>
-            <TextBlock Name="pbs1" Text="{Binding ElementName=pbs, Path=Value, StringFormat={}{0:0}%}" VerticalAlignment="Center" Margin="-200,110,20,7"/>
+            <ProgressBar x:Name="pbs" Minimum="0" Maximum="100"  Width="300" Height="72"  VerticalAlignment="Top"   Margin="-100,119,20,-39" ValueChanged="Pbs_ValueChanged" LargeChange="0" Background="#FFFBF9F9"/>
+            <TextBlock Name="pbs1" Text="{Binding ElementName=pbs, Path=Value, StringFormat={}{0:0}%}" VerticalAlignment="Center" Margin="-200,127,20,0" Height="25"/>
         </StackPanel>
-        <StackPanel Margin="337,330,-491,-181" Orientation="Horizontal" RenderTransformOrigin="0.457,0.532">
+        <StackPanel Margin="326,330,-480,-181" Orientation="Horizontal" RenderTransformOrigin="0.457,0.532">
             <StackPanel.Background>
                 <ImageBrush x:Name="myBrush" ImageSource="Lib\Institutozunino.PNG" Stretch="Uniform" Opacity="0.8" ></ImageBrush>
             </StackPanel.Background>

@@ -38,6 +38,8 @@ namespace Planning_Script_V1
         {
             VMS.TPS.Planning_Creation xapply = new VMS.TPS.Planning_Creation();
             List<VMS.TPS.Planning_Creation> dqm = VMS.TPS.Planning_Creation.Script();//lamo a la clase y la inicializo como es una lista 
+            xapply.progress=pbs;////pbs es el progress bar se lo paso por aqui
+
             foreach (VMS.TPS.Planning_Creation x in dqm)
             {
                 if (x.ID == Select_1.Content.ToString()) xapply.start(x.number, sc, x.approved);
@@ -99,7 +101,7 @@ namespace Planning_Script_V1
         }
         private void Pbs_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            
+
         }
     }
 }

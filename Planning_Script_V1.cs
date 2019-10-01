@@ -24,8 +24,8 @@ using System.Windows.Forms;
 
 // TODO: uncomment the line below if the script requires write access.
 [assembly: ESAPIScript(IsWriteable = true)]
-[assembly: AssemblyVersion("1.0.0.18")]
-[assembly: AssemblyFileVersion("1.0.0.18")]
+[assembly: AssemblyVersion("1.0.0.26")]
+[assembly: AssemblyFileVersion("1.0.0.26")]
 [assembly: AssemblyInformationalVersion("1.0")]
 
 
@@ -63,7 +63,7 @@ namespace VMS.TPS
 
 
             List<Planning_Creation> dqm = Planning_Creation.Script();//lamo a la clase y la inicializo como es una lista 
-
+           
             foreach (Planning_Creation x in dqm)//puedo llamar elemento de cada lista
             {
 
