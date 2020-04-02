@@ -21,11 +21,12 @@ using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Windows.Media;//da los colores
 using System.Windows.Forms;
+using System.IO;
 
 // TODO: uncomment the line below if the script requires write access.
 [assembly: ESAPIScript(IsWriteable = true)]
-[assembly: AssemblyVersion("1.0.0.26")]
-[assembly: AssemblyFileVersion("1.0.0.26")]
+[assembly: AssemblyVersion("1.0.0.87")]
+[assembly: AssemblyFileVersion("1.0.0.87")]
 [assembly: AssemblyInformationalVersion("1.0")]
 
 
@@ -44,10 +45,14 @@ namespace VMS.TPS
             x.St_Prostate(context);*/
 
 
-
-            // TODO : Add here your code that is called when the script is launched from Eclipse
-            StructureSet ss = context.StructureSet;
+            string text = File.ReadAllText(@"U:\14-Scripts Eclipse\Nombres_e_Instructivos\Lic_NET_dot\Licence.txt", Encoding.UTF8);
+            Planning_Creation text2 = new Planning_Creation();
+            if (text != text2.Key) System.Windows.MessageBox.Show("You dont have a valid key");
+                // TODO : Add here your code that is called when the script is launched from Eclipse
+                StructureSet ss = context.StructureSet;
             context.Patient.BeginModifications();
+            if (context.StructureSet == null) { throw new ArgumentNullException("Required input StructureSet is not available"); }
+            if (context.StructureSet.Structures == null) { throw new ArgumentNullException("Required input Structures is not available"); }
 
             var MainControl = new Planning_Script_V1.UserScript();//llamo la ventana del mainwindow
             window.Content = MainControl;//le doy propiedades
@@ -80,6 +85,10 @@ namespace VMS.TPS
                 //MainControl.Combo.Items[0].
                 //MainControl.Combo.Items[0]
                 //MainControl.approved = x.approved;
+            }
+            foreach (Planning_Creation x in dqm)
+            {
+                MainControl.Combo_points.Items.Add(x.ID);
             }
             //            MainControl.Combo.Items[0].
         }

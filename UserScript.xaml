@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Planning_Script_V1"
+        xmlns:library="clr-namespace:VMS.TPS"
         mc:Ignorable="d"
-        Height="496.596" Width="761.786">
+        Height="496.596" Width="985.899">
     <UserControl.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FF2A2A2C" Offset="0.136"/>
@@ -77,14 +78,21 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <ProgressBar x:Name="pbs" Minimum="0" Maximum="100"  Width="300" Height="72"  VerticalAlignment="Top"   Margin="-100,119,20,-39" ValueChanged="Pbs_ValueChanged" LargeChange="0" Background="#FFFBF9F9"/>
-            <TextBlock Name="pbs1" Text="{Binding ElementName=pbs, Path=Value, StringFormat={}{0:0}%}" VerticalAlignment="Center" Margin="-200,127,20,0" Height="25"/>
+            <ProgressBar x:Name="pbs" Minimum="0" Maximum="100"  Width="300" Height="12"  VerticalAlignment="Top"   Margin="-100,119,20,-39" Value="{Binding Path=(library:Planning_Creation.progress)}" ValueChanged="Pbs_ValueChanged" LargeChange="0" Background="#FFFBF9F9"/>
+            <TextBlock Name="pbs1" Text="{Binding ElementName=pbs, Path=Value, StringFormat={}{0:0}%}" VerticalAlignment="Center" Margin="-200,127,20,0" Height="2"/>
         </StackPanel>
-        <StackPanel Margin="326,330,-480,-181" Orientation="Horizontal" RenderTransformOrigin="0.457,0.532">
+        <StackPanel Margin="326,330,-248,-181" Orientation="Horizontal" RenderTransformOrigin="0.457,0.532">
             <StackPanel.Background>
                 <ImageBrush x:Name="myBrush" ImageSource="Lib\Institutozunino.PNG" Stretch="Uniform" Opacity="0.8" ></ImageBrush>
             </StackPanel.Background>
         </StackPanel>
+        <StackPanel Margin="674,31,-531,-181"  Background="#FF6D6D74">
+            <Label Content="Reference Points:" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#FFF8F8F9" FontSize="14" Height="31" RenderTransformOrigin="20.476,0.742" Width="150"/>
+            <ComboBox Name="Combo_points" HorizontalAlignment="Left" Margin="8,2,-660,0" VerticalAlignment="Top" Width="279" Height="27" SelectionChanged="Combo_points_SelectionChanged" Foreground="Blue">
+            </ComboBox>
+            <Button x:Name="Execute" MinWidth="90" Margin="-0,160,0,0" VerticalAlignment="Top" Height="25" Content="Execute" Click="execute_button" Width="91" FontSize="12"/>
+        </StackPanel>
+
     </Grid>
 
 </UserControl>

@@ -5,7 +5,6 @@ W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\plugins\Planning_Sc
 W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\plugins\Planning_Script_V1.esapi.pdb
 W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\UserScript.baml
 W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\WindowCredit.baml
-W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V1.csproj.CoreCompileInputs.cache
 W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\WindowMessageBar.g.cs
 W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\WindowMessageBar.baml
 W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\plugins\planning\Planning_Script_V2.esapi.dll
@@ -15,3 +14,18 @@ W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Pla
 W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V2.esapi.g.resources
 W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V2.esapi.dll
 W:\FISICA\CARPETAS PERSONALES\Alberto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V2.esapi.pdb
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V1.csprojAssemblyReference.cache
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\UserScript.g.cs
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\WindowCredit.g.cs
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\WindowMessageBar.g.cs
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\UserScript.baml
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\WindowCredit.baml
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\WindowMessageBar.baml
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V1.csproj.CoreCompileInputs.cache
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\plugins\planning\Planning_Script_V2.esapi.dll
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\plugins\planning\Planning_Script_V2.esapi.pdb
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V2.esapi_MarkupCompile.cache
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V2.esapi_MarkupCompile.lref
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V2.esapi.g.resources
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V2.esapi.dll
+W:\FISICA\CARPETAS PERSONALES\Albrto Alarcon\Eclipse script\ProjectsEclipse\Planning_Script_V1\obj\x64\Debug\Planning_Script_V2.esapi.pdb

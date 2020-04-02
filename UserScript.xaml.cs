@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
+using Application = VMS.TPS.Common.Model.API.Application;
 
 namespace Planning_Script_V1
 {
@@ -38,7 +39,8 @@ namespace Planning_Script_V1
         {
             VMS.TPS.Planning_Creation xapply = new VMS.TPS.Planning_Creation();
             List<VMS.TPS.Planning_Creation> dqm = VMS.TPS.Planning_Creation.Script();//lamo a la clase y la inicializo como es una lista 
-            xapply.progress=pbs;////pbs es el progress bar se lo paso por aqui
+            //xapply.progress=pbs;////pbs es el progress bar se lo paso por aqui
+            pbs.Value = xapply.progress;
 
             foreach (VMS.TPS.Planning_Creation x in dqm)
             {
@@ -50,6 +52,25 @@ namespace Planning_Script_V1
 
         public void close_button(object sender, RoutedEventArgs e)
         {
+           /* var curso = sc.Patient.Courses.FirstOrDefault(x=>x.Id.Contains("SBRT_Prostate"));//para hacer lo del punto de referencia 
+            
+            System.Windows.MessageBox.Show(curso.Id);
+            var plans =     curso.PlanSetups;
+            var punto3 = sc.Patient.Courses.FirstOrDefault(x => x.Id.Contains("SBRT_Prostate")).PlanSetups.FirstOrDefault(y => y.Id.Contains("SBRT_Prostata")).AddReferencePoint(sc.Patient.Courses.FirstOrDefault(x => x.Id.Contains("SBRT_Prostate")).PlanSetups.FirstOrDefault(y => y.Id.Contains("SBRT_Prostata")).StructureSet.Structures.FirstOrDefault(y => y.Id.Contains("PTV_High_3625")), null, "PTV_High_3625", "PTV_High_3625");
+
+           foreach (var x in plans)
+            {
+                if (x != null)
+                {
+                    var punto = x.AddReferencePoint(x.StructureSet.Structures.FirstOrDefault(y=>y.Id.Contains("PTV_High_3625")), null,"PTV_High_3625", "PTV_High_3625");
+                    punto.TotalDoseLimit = new DoseValue(36.25,DoseValue.DoseUnit.Gy);
+                    punto.SessionDoseLimit = new DoseValue(7.25, DoseValue.DoseUnit.Gy);
+                    punto.DailyDoseLimit = new DoseValue(7.25, DoseValue.DoseUnit.Gy);
+
+                    System.Windows.MessageBox.Show(x.Id);
+                }
+                else System.Windows.MessageBox.Show("0");
+            }*/
             System.Windows.Window.GetWindow(this).Close();//cierra la ventana de la interface main
         }
 
@@ -102,6 +123,25 @@ namespace Planning_Script_V1
         private void Pbs_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
+        }
+
+        private void Combo_points_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Select_1.Content = Combo_points.SelectedItem.ToString();//coloca en el boton de select el valor de lo escogido
+        }
+
+        private void execute_button(object sender, RoutedEventArgs e)
+        {
+            VMS.TPS.Planning_Creation xapply = new VMS.TPS.Planning_Creation();
+            List<VMS.TPS.Planning_Creation> dqm = VMS.TPS.Planning_Creation.Script();//lamo a la clase y la inicializo como es una lista 
+            //xapply.progress=pbs;////pbs es el progress bar se lo paso por aqui
+            pbs.Value = xapply.progress;
+
+            foreach (VMS.TPS.Planning_Creation x in dqm)
+            {
+                if (x.ID == Select_1.Content.ToString()) xapply.start(x.number, sc, x.approved,true);//true es para que ejecute los puntos
+            }
+            System.Windows.MessageBox.Show("Finish points");
         }
     }
 }
