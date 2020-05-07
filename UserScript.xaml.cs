@@ -28,25 +28,20 @@ namespace Planning_Script_V1
         public UserScript()
         {
             InitializeComponent();
-            //Combo.DrawMode = DrawMode.OwnerDrawVariable;
-            //string selected = Combo.SelectedItem.ToString();
         }
         public StructureSet ss;
         public ScriptContext sc;
 
-        public void apply_button(object sender, RoutedEventArgs e)
-
+        public void Apply_button(object sender, RoutedEventArgs e)
         {
             VMS.TPS.Planning_Creation xapply = new VMS.TPS.Planning_Creation();
             List<VMS.TPS.Planning_Creation> dqm = VMS.TPS.Planning_Creation.Script();//lamo a la clase y la inicializo como es una lista 
             //xapply.progress=pbs;////pbs es el progress bar se lo paso por aqui
-            pbs.Value = xapply.progress;
-
             foreach (VMS.TPS.Planning_Creation x in dqm)
             {
-                if (x.ID == Select_1.Content.ToString()) xapply.start(x.number, sc, x.approved);
+                if (x.ID == Select_1.Content.ToString()) xapply.Start(x.Number, sc, x.Approved);
             }
-
+            pbs.Value = 100;
             System.Windows.MessageBox.Show("Enjoy your new automatic plan");
         }
 
@@ -115,14 +110,10 @@ namespace Planning_Script_V1
             int b = 0;
             foreach (VMS.TPS.Planning_Creation x in dqm)
             {
-                if (x.approved) e.Graphics.DrawString(comboBox.Items[b].ToString(), font, System.Drawing.Brushes.Green, e.Bounds);
+                if (x.Approved) e.Graphics.DrawString(comboBox.Items[b].ToString(), font, System.Drawing.Brushes.Green, e.Bounds);
                 else e.Graphics.DrawString(comboBox.Items[b].ToString(), font, System.Drawing.Brushes.Red, e.Bounds); ;
                 b += 1;
             }
-        }
-        private void Pbs_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
         }
 
         private void Combo_points_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -135,11 +126,11 @@ namespace Planning_Script_V1
             VMS.TPS.Planning_Creation xapply = new VMS.TPS.Planning_Creation();
             List<VMS.TPS.Planning_Creation> dqm = VMS.TPS.Planning_Creation.Script();//lamo a la clase y la inicializo como es una lista 
             //xapply.progress=pbs;////pbs es el progress bar se lo paso por aqui
-            pbs.Value = xapply.progress;
+            pbs.Value = xapply.Progress;
 
             foreach (VMS.TPS.Planning_Creation x in dqm)
             {
-                if (x.ID == Select_1.Content.ToString()) xapply.start(x.number, sc, x.approved,true);//true es para que ejecute los puntos
+                if (x.ID == Select_1.Content.ToString()) xapply.Start(x.Number, sc, x.Approved,true);//true es para que ejecute los puntos
             }
             System.Windows.MessageBox.Show("Finish points");
         }

@@ -35,10 +35,10 @@ namespace VMS.TPS//tiene que ser igual que el main
         public Planning_Creation() { } //esto es para poder invocar a la clase//le paso el boton de progresso.
         public string ID { get; set; }//nombre del script a ejecutar
         public string Key { get; } = "PHYSICS_ALBERTO_ALARCON";
-        public bool approved { get; set; }// si esta aprobado
+        public bool Approved { get; set; }// si esta aprobado
         public string SCRIPT_NAME { get; set; }//el nombre que muestra en la applicacion
-        public int number { get; set; }
-        public double progress { get; set; }
+        public int Number { get; set; }
+        public double Progress { get; set; }
 
         //La lista de script es aqui
         public static List<Planning_Creation> Script()//ScriptContext sc) //hay que aprobar el script aqui sino no va correr
@@ -47,77 +47,77 @@ namespace VMS.TPS//tiene que ser igual que el main
             list.Add(new Planning_Creation//esto es una lista de clases dentro
             {
                 ID = "Script_Breast(Mama)",//nombre que aparece en la lista de la interfaz grafica
-                approved = true,//si el script esta aprobado o no
+                Approved = true,//si el script esta aprobado o no
                 SCRIPT_NAME = "Breast_ChestWall_Structures",//nombre de las advertencias 
-                number = 1//nombre del script se enlaza con Start.
+                Number = 1//nombre del script se enlaza con Start.
             });
             list.Add(new Planning_Creation
             {
                 ID = "Script_SBRT_Prostate(SBRT_prostata)",
-                approved = true,
+                Approved = true,
                 SCRIPT_NAME = "Prostate_Structures",
-                number = 0
+                Number = 0
             });
             list.Add(new Planning_Creation
             {
                 ID = "Script_Rectum20Fx(Recto)",
-                approved = true,
+                Approved = true,
                 SCRIPT_NAME = "Rectum_Structures",
-                number = 2
+                Number = 2
             });
             list.Add(new Planning_Creation
             {
                 ID = "Script_Head_Neck25Fx(CYC)",
-                approved = true,
+                Approved = true,
                 SCRIPT_NAME = "Head_Neck_Structures",
-                number = 3
+                Number = 3
             });
             list.Add(new Planning_Creation
             {
                 ID = "Script_Cervix20Fx(CuelloUtero)",
-                approved = true,
+                Approved = true,
                 SCRIPT_NAME = "Cervix_Structures",
-                number = 4
+                Number = 4
             });
             list.Add(new Planning_Creation
             {
                 ID = "Script_Prostate_Combo_HDR_Fx15(Braqui)",
-                approved = true,
+                Approved = true,
                 SCRIPT_NAME = "Prostate_ComboHDR_Structures",
-                number = 5
+                Number = 5
             });
             list.Add(new Planning_Creation
             {
                 ID = "Script_ProstateBed_Fx20(Lecho)",
-                approved = true,
+                Approved = true,
                 SCRIPT_NAME = "ProstateBed_Structures",
-                number = 6
+                Number = 6
             });
             list.Add(new Planning_Creation
             {
                 ID = "Script_Bladder_Fx20(Vejiga)",//saint fausto
-                approved = true,
+                Approved = true,
                 SCRIPT_NAME = "Bladder_Structures",
-                number = 7
+                Number = 7
             });
             list.Add(new Planning_Creation
             {
                 ID = "Script_Endometrium_Fx20(Endometrio)",//saint fausto
-                approved = true,
+                Approved = true,
                 SCRIPT_NAME = "Bladder_Structures",
-                number = 8
+                Number = 8
             });
             list.Add(new Planning_Creation
             {
                 ID = "Script_Liver_Fx3(Higado)",//saint fausto
-                approved = true,
+                Approved = true,
                 SCRIPT_NAME = "Bladder_Structures",
-                number = 9
+                Number = 9
             });
             return list;
         } //ESTAN LIGADOS EL NUMBER AQUI
         //comienzo del script strutures
-        public void start(int template, ScriptContext context, bool appr, bool points = false)
+        public void Start(int template, ScriptContext context, bool appr, bool points = false)
         {//ejecuta el scrit seleccionado en User script.c   LIGADO CON VALOR DE TEMPLATE
             if (template == 0 && appr) Plan_Prostate_5Fx(context, points);
             else if (template == 1 && appr) Plan_Mama(context, points);
@@ -139,7 +139,71 @@ namespace VMS.TPS//tiene que ser igual que el main
             return Math.Ceiling(valor / paso) * paso * 10;
         }
 
-        public void Jaws_corrected(Beam VMAT, Structure ptv_total, bool IsMama = false)
+        private void ChangeName(string name, Course cs=null, Structure st = null, StructureSet ss = null, Image img = null, ExternalPlanSetup eps=null)
+        {
+            if (eps !=null)
+            {
+                try
+                {
+                    eps.Id = name;
+                }
+                catch (Exception)
+                {
+                    if (name.Length < 16) img.Id = name + ".";
+                    else img.Id = name.Remove(name.Length - 1) + ".";
+                }
+            }
+            if (cs != null)
+            {
+                try
+                {
+                    cs.Id = name;
+                }
+                catch (Exception)
+                {
+                    if (name.Length <= 6) cs.Id = name + DateTime.Now.ToString("MM/dd/yyyy");
+                    else cs.Id = name.Remove(6) + DateTime.Now.ToString("MM/dd/yyyy");
+                }
+            }
+            if (img != null)
+            {
+                try
+                {
+                    img.Id = name;
+                }
+                catch (Exception)
+                {
+                    if (name.Length < 16) img.Id = name + ".";
+                    else img.Id = name.Remove(name.Length - 1) + ".";
+                }
+            }
+            if (ss != null)
+            {
+                try
+                {
+                    ss.Id = name;
+                }
+                catch (Exception)
+                {
+                    if (name.Length < 16) ss.Id = name + ".";
+                    else ss.Id = name.Remove(name.Length - 1) + ".";
+                }
+            }
+            if (st != null)
+            {
+                try
+                {
+                    st.Id = name;
+                }
+                catch (Exception)
+                {
+                    if (name.Length < 16) st.Id = name + ".";
+                    else st.Id = name.Remove(name.Length - 1) + ".";
+                }
+            }
+        }
+
+        public static void Jaws_corrected(Beam VMAT, Structure ptv_total, bool IsMama = false)
         {
             if (!IsMama) VMAT.FitCollimatorToStructure(new FitToStructureMargins(8), ptv_total, true, true, false);//coloco el ismama para que no me cambie los colimadores x que le pasoen general siempre entra excepto en la mama
             BeamParameters beampar = VMAT.GetEditableParameters();//obtiene los beam parametros del arco 1 como ser losjaws isocentro etc
@@ -162,24 +226,14 @@ namespace VMS.TPS//tiene que ser igual que el main
             VMAT.ApplyParameters(beampar);
         }
 
-        public ExternalPlanSetup settingPlan(int machine, Patient patient, StructureSet sset, double RxDose, int NFractions, Structure ptv_total, string[] setting_names, Double[] setting_arc, Double[] c, int arc_number = 1)
+        public ExternalPlanSetup SettingPlan(int machine, Patient patient, StructureSet sset, double RxDose, int NFractions, Structure ptv_total, string[] setting_names, double[] setting_arc, Double[] c, int arc_number = 1)
         {
             patient.BeginModifications();   // enable writing with this script.
             IEnumerable<Course> sss = patient.Courses;//lista de cursos
-
-            Course curcourse;//creo la  clase course porque no se puede crear dentro de condicional
-
-            if (!sss.Any(x => x.Id == setting_names[0]))//para ver si existen cursos con el mismo nombre
-            {
-                curcourse = patient.AddCourse();
-                curcourse.Id = setting_names[0];
-            }
-            else
-            {// sino se pone corchetes no te deja crear clases
-                curcourse = sss.FirstOrDefault(s => s.Id == setting_names[0]);
-            }
+            Course curcourse = patient.AddCourse(); ;//creo la  clase course porque no se puede crear dentro de condicional
+            ChangeName(setting_names[0], cs: curcourse);
             ExternalPlanSetup cureps = curcourse.AddExternalPlanSetup(sset);
-            cureps.Id = setting_names[1];
+            ChangeName(setting_names[1], eps: cureps);
             //set calculation model use default??? nose
             cureps.SetCalculationModel(CalculationType.PhotonVMATOptimization, "PO_15606");
             cureps.SetCalculationModel(CalculationType.DVHEstimation, "DVH Estimation Algorithm [15.6.06]");
@@ -187,66 +241,138 @@ namespace VMS.TPS//tiene que ser igual que el main
             cureps.SetCalculationOption("AAA_15606", "CalculationGridSizeInCM", "0.125");
             cureps.SetCalculationOption("AAA_15606", "HeterogeneityCorrection", "ON");
             cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), 1.0);//prescription 0.99=99 %tratamiento sip
-            progress = 10;
+            Progress = 10;
             //esto da en mm
             VVector isocenter = new VVector(RedondeoArriba(Math.Round(ptv_total.CenterPoint.x + c[0], 0) / 10.0), RedondeoArriba(Math.Round(ptv_total.CenterPoint.y + c[1], 0) / 10.0), RedondeoArriba(Math.Round(ptv_total.CenterPoint.z + c[2], 0) / 10.0));//c es la ctte para prostata para bajar el iso
-            ExternalBeamMachineParameters ebmp; //esto lo inicializo antes para poder elegir maquina
-            if (machine == 0)
+            ExternalBeamMachineParameters ebmp = null; //esto lo inicializo antes para poder elegir maquina
+            if (machine == 0)//novalis2
             {
                 ebmp = new ExternalBeamMachineParameters("NovalisTX2", setting_names[3], 600, setting_names[4], null);//SRS ARC O STATIC SE PUEDE COLOCAR CUALQUIERA QUE ESTE EN LA LISTA.
             }
-            else ebmp = new ExternalBeamMachineParameters("TrueBeamSN3169", setting_names[3], 600, setting_names[4], null);//SRS ARC O STATIC SE PUEDE COLOCAR CUALQUIERA QUE ESTE EN LA LISTA.// 0=nombre del course y 1=del plan, 2=field, 3=energia, 4= srsarc o arc 5=rapidplan
+            else if(machine==1) ebmp = new ExternalBeamMachineParameters("TrueBeamSN3169", setting_names[3], 600, setting_names[4], null);//SRS ARC O STATIC SE PUEDE COLOCAR CUALQUIERA QUE ESTE EN LA LISTA.// 0=nombre del course y 1=del plan, 2=field, 3=energia, 4= srsarc o arc 5=rapidplan
 
             for (int i = 1; i <= arc_number; i++)
             {
                 if (i == 1)
 
                 {
-                    Beam VMAT1 = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), setting_arc[0], setting_arc[1], setting_arc[2], GantryDirection.Clockwise, 0, isocenter);
-                    VMAT1.Id = setting_names[2] + i.ToString() + "_CW";
-                    Jaws_corrected(VMAT1, ptv_total);
+                    Beam VMAT1 = BeamWithMaxPostionJaws(ebmp, setting_arc, true, isocenter, cureps, ptv_total);
+                    VMAT1.Id = setting_names[2] + "_CW_" + i.ToString();
+                    //Beam VMAT1 = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), setting_arc[0], setting_arc[1], setting_arc[2], GantryDirection.Clockwise, 0, isocenter);
+                    //VMAT1.Id = setting_names[2] +  "_CW_" + i.ToString();
+                    //Jaws_corrected(VMAT1, ptv_total);
                 }
                 else if (i == 2)
                 {
-                    Beam VMAT2 = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);
-                    VMAT2.Id = setting_names[2] + i.ToString() + "_CCW";
-                    Jaws_corrected(VMAT2, ptv_total);
+                    Beam VMAT2 = BeamWithMaxPostionJaws(ebmp, setting_arc, false, isocenter, cureps, ptv_total);
+                    VMAT2.Id = setting_names[2] + "_CW_" + i.ToString();
+                    //Beam VMAT2 = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);
+                    //VMAT2.Id = setting_names[2]  + "_CCW_" + i.ToString();
+                    //Jaws_corrected(VMAT2, ptv_total);
                 }
                 else if (i == 3)
                 {
-                    Beam VMAT3 = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], setting_arc[1], setting_arc[2], GantryDirection.Clockwise, 0, isocenter);
-                    VMAT3.Id = setting_names[2] + i.ToString() + "_CW";
-                    Jaws_corrected(VMAT3, ptv_total);
+                    Beam VMAT3 = BeamWithMaxPostionJaws(ebmp, setting_arc, true, isocenter, cureps, ptv_total);
+                    VMAT3.Id = setting_names[2] + "_CW_" + i.ToString();
+                    //Beam VMAT3 = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], setting_arc[1], setting_arc[2], GantryDirection.Clockwise, 0, isocenter);
+                    //VMAT3.Id = setting_names[2]  + "_CW_" + i.ToString();
+                    //Jaws_corrected(VMAT3, ptv_total);
                 }
                 else if (i == 4)
                 {
-                    Beam VMAT4 = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);
-                    VMAT4.Id = setting_names[2] + i.ToString() + "_CCW";
-                    Jaws_corrected(VMAT4, ptv_total);
+                    Beam VMAT4 = BeamWithMaxPostionJaws(ebmp, setting_arc, true, isocenter, cureps, ptv_total);
+                    VMAT4.Id = setting_names[2] + "_CW_" + i.ToString();
+                    //Beam VMAT4 = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);
+                    //VMAT4.Id = setting_names[2] + "_CCW_" + i.ToString();
+                    //Jaws_corrected(VMAT4, ptv_total);
                 }
             }
-            progress = 15;
+            Progress = 15;
             return cureps;
         }
 
-        public ExternalPlanSetup settingPlanMama(int machine, Patient patient, StructureSet sset, double RxDose, int NFractions, Structure ptv_total, string[] setting_names, Double[] setting_arc, Double[] c, int arc_number = 2, bool side = true)//side true derecha
+        private Beam CreateArcBeamAngle(ExternalBeamMachineParameters ebmp, VRect<double> jawsVector, double[] setting_arc,bool gantryIsClockwise, VVector isocenter,ExternalPlanSetup eps, Structure st)
         {
-            patient.BeginModifications();   // enable writing with this script.
-            IEnumerable<Course> sss = patient.Courses;//lista de cursos
-
-            Course curcourse;//creo la  clase course porque no se puede crear dentro de condicional
-
-            if (!sss.Any(x => x.Id == setting_names[0]))//para ver si existen cursos con el mismo nombre
+            Beam beam=null;
+            double shift = 0;
+            if (setting_arc[1] == setting_arc[2]) shift = Convert.ToDouble(gantryIsClockwise) - 0.5;
+            if (gantryIsClockwise)
             {
-                curcourse = patient.AddCourse();
-                curcourse.Id = setting_names[0];
+                //beam1 = eps.AddArcBeam(ebmp, jawsVector, collAngle, angleToStart, angleToStart + gantryDirectionShift, GantryDirection.Clockwise, 0, isocenter);//179
+                beam = eps.AddArcBeam(ebmp, jawsVector, setting_arc[0], setting_arc[1], setting_arc[2] + shift, GantryDirection.Clockwise, 0, isocenter);
             }
             else
-            {// sino se pone corchetes no te deja crear clases
-                curcourse = sss.FirstOrDefault(s => s.Id == setting_names[0]);
+            {//shift es porq si doy angle to start and stop iguales me da error
+                beam = eps.AddArcBeam(ebmp, jawsVector, setting_arc[0], setting_arc[2], setting_arc[1] +shift, GantryDirection.CounterClockwise, 0, isocenter);//179
             }
+            if (shift !=0) beam.FitCollimatorToStructure(new FitToStructureMargins(8), st, true, true, false);//ver si 8 no genera problemas
+            return beam;
+        }
+        //con side 
+        private Beam BeamWithMaxPostionJaws(ExternalBeamMachineParameters ebmp, double[] setting_arc, bool gantryIsClockwise, VVector isocenter, ExternalPlanSetup eps,  Structure st, bool side=true, bool isMama=true)
+        {
+            VRect<double> jawsVector = new VRect<double>(-10, -10, 10, 10);
+            double[] setting_local = { setting_arc[0], setting_arc[1], setting_arc[2] };//LOCAL PARA CAMBIAR ANGULOS
+            setting_local[2] = setting_arc[1];
+            //////////////////////////////////////////ESTOS 3 BEAMS ES PARA ENCONTRAR LA MAXIMA APERTURA DE OS JAWS
+            Beam beam1 = CreateArcBeamAngle(ebmp, jawsVector, setting_local, gantryIsClockwise, isocenter, eps,st);
+            setting_local[1] = setting_arc[2]; setting_local[2] = setting_arc[2];
+            Beam beam2 = CreateArcBeamAngle(ebmp, jawsVector, setting_local, gantryIsClockwise, isocenter, eps,st);
+            Beam beam3;
+            //todo esto para encontrar el tamano maximo para ajustar
+            if (side)//true es derecha
+            {
+                if (isMama) { setting_local[1] = 315; setting_local[2] = 315; }
+                else if (gantryIsClockwise) { setting_local[1] = 120; setting_local[2] = 120; }
+                else if (!gantryIsClockwise) { setting_local[1] = 220; setting_local[2] = 220; }//
+                beam3 = CreateArcBeamAngle(ebmp, jawsVector, setting_local, gantryIsClockwise, isocenter, eps,st);//gantry es clcok wise true si es clock wise
+            }
+            else//izq
+            {
+                if (isMama) { setting_local[1] = 45; setting_local[2] = 45; }
+                    beam3 = CreateArcBeamAngle(ebmp, jawsVector, setting_local, gantryIsClockwise, isocenter, eps, st);
+            }
+            double[] jawsX1Max = { Math.Abs(beam1.ControlPoints.First().JawPositions.X1), Math.Abs(beam2.ControlPoints.First().JawPositions.X1), Math.Abs(beam3.ControlPoints.First().JawPositions.X1) };
+            double[] jawsX2Max = { Math.Abs(beam1.ControlPoints.First().JawPositions.X2), Math.Abs(beam2.ControlPoints.First().JawPositions.X2), Math.Abs(beam3.ControlPoints.First().JawPositions.X2) };
+            double[] jawsY1Max = { Math.Abs(beam1.ControlPoints.First().JawPositions.Y1), Math.Abs(beam2.ControlPoints.First().JawPositions.Y1), Math.Abs(beam3.ControlPoints.First().JawPositions.Y1) };
+            double[] jawsY2Max = { Math.Abs(beam1.ControlPoints.First().JawPositions.Y2), Math.Abs(beam2.ControlPoints.First().JawPositions.Y2), Math.Abs(beam3.ControlPoints.First().JawPositions.Y2) };
+            //beam con la maxima apertura
+            Beam VMAT = CreateArcBeamAngle(ebmp, Find3Max(beam1,beam2,beam3), setting_arc, gantryIsClockwise, isocenter, eps, st);
+            Jaws_corrected(VMAT, st, true);//CORRIJE LOS JAWS Y
+            eps.RemoveBeam(beam1);
+            eps.RemoveBeam(beam2);
+            eps.RemoveBeam(beam3);
+            return VMAT;
+        }
+
+        private VRect<double> Find3Max(Beam beam1,Beam beam2, Beam beam3)
+        {
+            double[] jawsX1Max = { Math.Abs(beam1.ControlPoints.First().JawPositions.X1), Math.Abs(beam2.ControlPoints.First().JawPositions.X1), Math.Abs(beam3.ControlPoints.First().JawPositions.X1) };
+            double[] jawsX2Max = { Math.Abs(beam1.ControlPoints.First().JawPositions.X2), Math.Abs(beam2.ControlPoints.First().JawPositions.X2), Math.Abs(beam3.ControlPoints.First().JawPositions.X2) };
+            double[] jawsY1Max = { Math.Abs(beam1.ControlPoints.First().JawPositions.Y1), Math.Abs(beam2.ControlPoints.First().JawPositions.Y1), Math.Abs(beam3.ControlPoints.First().JawPositions.Y1) };
+            double[] jawsY2Max = { Math.Abs(beam1.ControlPoints.First().JawPositions.Y2), Math.Abs(beam2.ControlPoints.First().JawPositions.Y2), Math.Abs(beam3.ControlPoints.First().JawPositions.Y2) };
+            return new VRect<double>(-jawsX1Max.Max(), -jawsY1Max.Max(), jawsX2Max.Max(), jawsY2Max.Max());
+        }
+        
+        public ExternalPlanSetup SettingPlanMama(int machine, Patient patient, StructureSet sset, double RxDose, int NFractions, Structure ptv_total, string[] setting_names, double[] setting_arc, double[] c, int arc_number = 2, bool side = true)//side true derecha
+        {
+            patient.BeginModifications();   // enable writing with this script.
+            //IEnumerable<Course> sss = patient.Courses;//lista de cursos
+            Course curcourse = patient.AddCourse(); ;//creo la  clase course porque no se puede crear dentro de condicional
+            ChangeName(setting_names[0], cs: curcourse);
             ExternalPlanSetup cureps = curcourse.AddExternalPlanSetup(sset);
-            cureps.Id = setting_names[1];
+            ChangeName(setting_names[1], eps: cureps);
+            double[] setting_arc2 = { 360 - setting_arc[0], setting_arc[1], setting_arc[2] };//estas dos lineas por que se tiene 2 colimadores
+            //if (!sss.Any(x => x.Id == setting_names[0]))//para ver si existen cursos con el mismo nombre
+            //{
+            //    curcourse = patient.AddCourse();
+
+            //}
+            //else
+            //{// sino se pone corchetes no te deja crear clases
+            //    curcourse = sss.FirstOrDefault(s => s.Id == setting_names[0]);
+            //}
+
             //set calculation model use default??? nose
             cureps.SetCalculationModel(CalculationType.PhotonVMATOptimization, "PO_15606");
             cureps.SetCalculationModel(CalculationType.DVHEstimation, "DVH Estimation Algorithm [15.6.06]");
@@ -254,120 +380,140 @@ namespace VMS.TPS//tiene que ser igual que el main
             cureps.SetCalculationOption("AAA_15606", "CalculationGridSizeInCM", "0.25");
             cureps.SetCalculationOption("AAA_15606", "HeterogeneityCorrection", "ON");
             cureps.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), 1.0);//prescription 0.99=99 %tratamiento sip
-            progress = 10;
+            Progress = 10;
             //esto da en mm
             VVector isocenter = new VVector(RedondeoArriba(Math.Round(ptv_total.CenterPoint.x + c[0], 0) / 10.0), RedondeoArriba(Math.Round(ptv_total.CenterPoint.y + c[1], 0) / 10.0), RedondeoArriba(Math.Round(ptv_total.CenterPoint.z + c[2], 0) / 10.0));//c es la ctte para prostata para bajar el iso
-            ExternalBeamMachineParameters ebmp; //esto lo inicializo antes para poder elegir maquina
+            ExternalBeamMachineParameters ebmp = null; //esto lo inicializo antes para poder elegir maquina
             if (machine == 0)
             {
                 ebmp = new ExternalBeamMachineParameters("NovalisTX2", setting_names[3], 600, setting_names[4], null);//SRS ARC O STATIC SE PUEDE COLOCAR CUALQUIERA QUE ESTE EN LA LISTA.
             }
-            else ebmp = new ExternalBeamMachineParameters("TrueBeamSN3169", setting_names[3], 600, setting_names[4], null);//SRS ARC O STATIC SE PUEDE COLOCAR CUALQUIERA QUE ESTE EN LA LISTA.// 0=nombre del course y 1=del plan, 2=field, 3=energia, 4= srsarc o arc 5=rapidplan
-            /*float[,] MLC_1 = new float[2,120];//float[Bank,leaf] //para hacer un arcbeam con mlc y posicion MLC static
-            for (int j = 0; j < 2; j++) //lo lleno de ceros
-                {
-                for (int i = 0; i < 120; i++)
-                {
-                    MLC_1[j, i] = 0.0F;
-                }
+            else if (machine == 1) ebmp = new ExternalBeamMachineParameters("TrueBeamSN3169", setting_names[3], 600, setting_names[4], null);//SRS ARC O STATIC SE PUEDE COLOCAR CUALQUIERA QUE ESTE EN LA LISTA.// 0=nombre del course y 1=del plan, 2=field, 3=energia, 4= srsarc o arc 5=rapidplan
+            //para hacer un arcbeam con mlc y posicion MLC static
+            //float[,] MLC_1 = new float[2,120];//float[Bank,leaf] 
+            //for (int j = 0; j < 2; j++) //lo lleno de ceros
+            //    {
+            //    for (int i = 0; i < 120; i++)
+            //    {
+            //        MLC_1[j, i] = 0.0F;
+            //    }
                     
-                //System.Windows.MessageBox.Show("num:" + MLC_1[i, i]);
-                }
-            Beam VMAT4 = cureps.AddMLCArcBeam(ebmp, MLC_1, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);*/
+            //    //System.Windows.MessageBox.Show("num:" + MLC_1[i, i]);
+            //    }
+            //Beam VMAT4 = cureps.AddMLCArcBeam(ebmp, MLC_1, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);
 
             for (int i = 1; i <= arc_number; i++)
             {
                 if (i == 1)
 
                 {
-                    if (side)//es mama der
-                    {
-                        Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), setting_arc[0], 315, 320, GantryDirection.Clockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
-                        FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
-                        Beam VMAT1 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), setting_arc[0], setting_arc[1], setting_arc[2], GantryDirection.Clockwise, 0, isocenter);
-                        VMAT1.Id = setting_names[2] + i.ToString() + "_CW";
-                        Jaws_corrected(VMAT1, ptv_total, true);
-                        cureps.RemoveBeam(FieldMax);//quita el beam del maximo
-                    }
-                    else
-                    {
-                        Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), setting_arc[0], 45, 50, GantryDirection.Clockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
-                        FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
-                        Beam VMAT1 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), setting_arc[0], setting_arc[1], setting_arc[2], GantryDirection.Clockwise, 0, isocenter);
-                        VMAT1.Id = setting_names[2] + i.ToString() + "_CW";
-                        Jaws_corrected(VMAT1, ptv_total, true);
-                        cureps.RemoveBeam(FieldMax);//quita el beam del maximo
-                    }
+                    Beam VMAT1 = BeamWithMaxPostionJaws(ebmp, setting_arc, true, isocenter, cureps, ptv_total, side);
+                    VMAT1.Id = setting_names[2] + "_CW_" + i.ToString();
+                    //if (side)//es mama der
+                    //{
+                    //    Beam VMAT1 = BeamWithMaxPostionJaws(ebmp, setting_arc, true, isocenter, cureps, side, ptv_total);
+                    //    VMAT1.Id = setting_names[2] + "_CW" + i.ToString();
+                    //    //Beam VMAT1 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), setting_arc[0], setting_arc[1], setting_arc[2], GantryDirection.Clockwise, 0, isocenter);
+
+                    //    //Jaws_corrected(VMAT1, ptv_total, true);
+                    //    //cureps.RemoveBeam(FieldMax);//quita el beam del maximo
+                    //}
+                    //else//izq
+                    //{
+                    //    Beam VMAT1 = BeamWithMaxPostionJaws(ebmp, setting_arc, true, isocenter, cureps, side, ptv_total);
+                    //    //Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), setting_arc[0], setting_arc[2],setting_arc[2]+0.5,GantryDirection.Clockwise, 0, isocenter);//179
+                    //    //FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
+                    //    //Beam VMAT1 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), setting_arc[0], setting_arc[1], setting_arc[2], GantryDirection.Clockwise, 0, isocenter);
+                    //    VMAT1.Id = setting_names[2]  + "_CW" + i.ToString();
+                    //    Jaws_corrected(VMAT1, ptv_total, true);
+                    //    //cureps.RemoveBeam(FieldMax);//quita el beam del maximo
+                    //}
 
                 }
                 else if (i == 2)
                 {
-                    if (side)//es mama der
-                    {
-                        Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], 315, 310, GantryDirection.CounterClockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
-                        FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
-                        Beam VMAT2 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), 360 - setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);
-                        VMAT2.Id = setting_names[2] + i.ToString() + "_CCW";
-                        Jaws_corrected(VMAT2, ptv_total, true);
-                        cureps.RemoveBeam(FieldMax);//quita el beam del maximo
-                    }
-                    else
-                    {
-                        Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], 45, 40, GantryDirection.CounterClockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
-                        FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
-                        Beam VMAT2 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), 360 - setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);
-                        VMAT2.Id = setting_names[2] + i.ToString() + "_CCW";
-                        Jaws_corrected(VMAT2, ptv_total, true);
-                        cureps.RemoveBeam(FieldMax);//quita el beam del maximo
-                    }
+                    Beam VMAT2 = BeamWithMaxPostionJaws(ebmp, setting_arc2, false, isocenter, cureps, ptv_total, side);
+                    VMAT2.Id = setting_names[2] + "_CCW_" + i.ToString();
+                    //if (side)//es mama der
+                    //{
+                    //    Beam VMAT2 = BeamWithMaxPostionJaws(ebmp, setting_arc2, false, isocenter, cureps, side, ptv_total);
+                    //    //Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], setting_arc[2], setting_arc[2]-0.5, GantryDirection.CounterClockwise, 0, isocenter);
+                    //    ////Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], 315, 310, GantryDirection.CounterClockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
+                    //    //FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
+                    //    //Beam VMAT2 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), 360 - setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);
+                    //    VMAT2.Id = setting_names[2] +  "_CCW" + i.ToString();
+                    //   // Jaws_corrected(VMAT2, ptv_total, true);
+                    //    //cureps.RemoveBeam(FieldMax);//quita el beam del maximo
+                    //}
+                    //else
+                    //{
+                    //    Beam VMAT2 = BeamWithMaxPostionJaws(ebmp, setting_arc2, false, isocenter, cureps, side, ptv_total);
+                    //    Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], setting_arc[2], setting_arc[2]-0.5, GantryDirection.CounterClockwise, 0, isocenter);
+                    //    //Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], 45, 40, GantryDirection.CounterClockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
+                    //    FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
+                    //    Beam VMAT2 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), 360 - setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);
+                    //    VMAT2.Id = setting_names[2] +  "_CCW" + i.ToString();
+                    //    Jaws_corrected(VMAT2, ptv_total, true);
+                    //    cureps.RemoveBeam(FieldMax);//quita el beam del maximo
+                    //}
                 }
                 else if (i == 3)
                 {
-                    if (side)//es mama der
-                    {
-                        Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], 315, 320, GantryDirection.Clockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
-                        FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
-                        Beam VMAT3 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), 360 - setting_arc[0], setting_arc[1], setting_arc[2], GantryDirection.Clockwise, 0, isocenter);
-                        VMAT3.Id = setting_names[2] + i.ToString() + "_CW";
-                        Jaws_corrected(VMAT3, ptv_total, true);
-                        cureps.RemoveBeam(FieldMax);//quita el beam del maximo
-                    }
-                    else
-                    {
-                        Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], 45, 50, GantryDirection.Clockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
-                        FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
-                        Beam VMAT3 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), 360 - setting_arc[0], setting_arc[1], setting_arc[2], GantryDirection.Clockwise, 0, isocenter);
-                        VMAT3.Id = setting_names[2] + i.ToString() + "_CW";
-                        Jaws_corrected(VMAT3, ptv_total, true);
-                        cureps.RemoveBeam(FieldMax);//quita el beam del maximo
-                    }
+                    Beam VMAT3 = BeamWithMaxPostionJaws(ebmp, setting_arc2, true, isocenter, cureps,  ptv_total, side);
+                    VMAT3.Id = setting_names[2] + "_CW_" + i.ToString();
+                    //if (side)//es mama der
+                    //{
+                    //    Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], setting_arc[1], setting_arc[1]+0.5, GantryDirection.Clockwise, 0, isocenter);
+                    //    //Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], 315, 320, GantryDirection.Clockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
+                    //    FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
+                    //    Beam VMAT3 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), 360 - setting_arc[0], setting_arc[1], setting_arc[2], GantryDirection.Clockwise, 0, isocenter);
+                    //    VMAT3.Id = setting_names[2] +  "_CW" + i.ToString();
+                    //    Jaws_corrected(VMAT3, ptv_total, true);
+                    //    cureps.RemoveBeam(FieldMax);//quita el beam del maximo
+                    //}
+                    //else
+                    //{
+                    //    Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], setting_arc[1], setting_arc[1]+0.5,GantryDirection.Clockwise, 0, isocenter);
+                    //    //Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), 360 - setting_arc[0], 45, 50, GantryDirection.Clockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
+                    //    FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
+                    //    Beam VMAT3 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), 360 - setting_arc[0], setting_arc[1], setting_arc[2], GantryDirection.Clockwise, 0, isocenter);
+                    //    VMAT3.Id = setting_names[2] +  "_CW" + i.ToString();
+                    //    Jaws_corrected(VMAT3, ptv_total, true);
+                    //    cureps.RemoveBeam(FieldMax);//quita el beam del maximo
+                    //}
                 }
                 else if (i == 4)
                 {
-                    if (side)//es mama der
-                    {
-                        Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), setting_arc[0], 315, 310, GantryDirection.CounterClockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
-                        FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
-                        Beam VMAT4 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);
-                        VMAT4.Id = setting_names[2] + i.ToString() + "_CCW";
-                        Jaws_corrected(VMAT4, ptv_total, true);
-                        cureps.RemoveBeam(FieldMax);//quita el beam del maximo
-                    }
-                    else
-                    {
-                        Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), setting_arc[0], 45, 40, GantryDirection.CounterClockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
-                        FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
-                        Beam VMAT4 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);
-                        VMAT4.Id = setting_names[2] + i.ToString() + "_CCW";
-                        Jaws_corrected(VMAT4, ptv_total, true);
-                        cureps.RemoveBeam(FieldMax);//quita el beam del maximo
-                    }
+                    Beam VMAT4 = BeamWithMaxPostionJaws(ebmp, setting_arc, false, isocenter, cureps, ptv_total, side);
+                    VMAT4.Id = setting_names[2] + "_CCW_" + i.ToString();
+                    //if (side)//es mama der
+                    //{
+                        
+                    //    Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), setting_arc[0], setting_arc[1], setting_arc[1]-0.5, GantryDirection.CounterClockwise, 0, isocenter);
+                    //    //Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), setting_arc[0], 315, 310, GantryDirection.CounterClockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
+                    //    FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
+                    //    Beam VMAT4 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);
+                    //    VMAT4.Id = setting_names[2] + "_CCW" + i.ToString();
+                    //    Jaws_corrected(VMAT4, ptv_total, true);
+                    //    cureps.RemoveBeam(FieldMax);//quita el beam del maximo
+                    //}
+                    //else
+                    //{
+                    //    Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), setting_arc[0], setting_arc[1], setting_arc[1]-0.5,GantryDirection.CounterClockwise, 0, isocenter);
+                    //    //Beam FieldMax = cureps.AddArcBeam(ebmp, new VRect<double>(-100, -100, 100, 100), setting_arc[0], 45, 40, GantryDirection.CounterClockwise, 0, isocenter);//aqui hay que cambiar si queires cambiar la proyeccion del maximo
+                    //    FieldMax.FitCollimatorToStructure(new FitToStructureMargins(6), ptv_total, true, true, false);
+                    //    Beam VMAT4 = cureps.AddArcBeam(ebmp, new VRect<double>(FieldMax.ControlPoints.First().JawPositions.X1, FieldMax.ControlPoints.First().JawPositions.Y1, FieldMax.ControlPoints.First().JawPositions.X2, FieldMax.ControlPoints.First().JawPositions.Y2), setting_arc[0], setting_arc[2], setting_arc[1], GantryDirection.CounterClockwise, 0, isocenter);
+                    //    VMAT4.Id = setting_names[2]  + "_CCW" + i.ToString();
+                    //    Jaws_corrected(VMAT4, ptv_total, true);
+                    //    cureps.RemoveBeam(FieldMax);//quita el beam del maximo
+                    //}
                 }
             }
-            progress = 15;
+            Progress = 15;
             return cureps;
         }
-        public void opti_cureps(ExternalPlanSetup cureps)
+        
+        public static void Opti_cureps(ExternalPlanSetup cureps)
         {
             OptimizerResult optresult = cureps.OptimizeVMAT(new OptimizationOptionsVMAT(OptimizationIntermediateDoseOption.UseIntermediateDose, string.Empty));
             cureps.OptimizeVMAT();
@@ -380,10 +526,10 @@ namespace VMS.TPS//tiene que ser igual que el main
             DoseValue normalization = extplan.GetDoseAtVolume(S_norm, volume_porcent, VolumePresentation.Relative, DoseValuePresentation.Absolute);
             double normaliza = Convert.ToDouble(normalization.Dose) / RxDose;
             extplan.SetPrescription(NFractions, new DoseValue(RxDose / NFractions, "Gy"), Math.Round( normaliza,2));//prescription 0.99=99 %tratamiento sip
-            progress = 100;
+            Progress = 100;
         }
 
-        public void Reference_points(string[] structure_name, PlanSetup ps,double total, double dose_frac, bool radcalc=false)
+        public static void Reference_points(string[] structure_name, PlanSetup ps,double total, double dose_frac, bool radcalc=false)
         {
             string[] PTV_T = { "zPTV_Total!", "PTV TOTAL", "PTV Total", "PTV_TOTAL", "PTV_total", "PTV_Total" , "PTV_Total!" };
             if (ps.StructureSet.Structures.Any(x => x.Id == structure_name[0]))
@@ -405,7 +551,14 @@ namespace VMS.TPS//tiene que ser igual que el main
             }  
             if (radcalc)
             {
-                ps.AddReferencePoint(ps.StructureSet.Structures.FirstOrDefault(x => PTV_T.Any(s => s == x.Id)), ps.Dose.DoseMax3DLocation, "Radcalc", "Radcalc");
+                try
+                {
+                    ps.AddReferencePoint(ps.StructureSet.Structures.FirstOrDefault(x => PTV_T.Any(s => s == x.Id)), ps.Dose.DoseMax3DLocation, "Radcalc", "Radcalc");
+                }
+                catch (Exception)
+                {
+                }
+                
             }
         }
         ///////Comienza lo personalizado para cada plan:
@@ -453,7 +606,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                 DVH_struct.Add(PRV_Rectum.FirstOrDefault(x => cureps.StructureSet.Structures.Any(s => s.Id == x)), PRV_Rectum[0]);
                 DVH_struct.Add(N_Trigone.FirstOrDefault(x => cureps.StructureSet.Structures.Any(s => s.Id == x)), N_Trigone[0]);
                 DVH_struct.Add(N_Urethra.FirstOrDefault(x => cureps.StructureSet.Structures.Any(s => s.Id == x)), N_Urethra[0]);
-                progress = 50;
+                Progress = 50;
                 return cureps;
             }
             else
@@ -614,7 +767,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                     }
                     cureps.OptimizationSetup.AddAutomaticNormalTissueObjective(100.0f); //anade normal tissio automatico
                 }
-                progress = 45;
+                Progress = 45;
 
                 return cureps;
             }
@@ -656,7 +809,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                 DVH_struct.Add(N_GS.FirstOrDefault(x => cureps.StructureSet.Structures.Any(s => s.Id == x)), N_GS[0]);
                 DVH_struct.Add(N_GM.FirstOrDefault(x => cureps.StructureSet.Structures.Any(s => s.Id == x)), N_GM[0]);
                 cureps.CalculateDVHEstimates(rapidplan[select], DVH_dose, DVH_struct);//ID DEL MODELO // DOSIS /MATCH STRUCTURA
-                progress = 50;
+                Progress = 50;
 
                 return cureps;
             }
@@ -688,7 +841,7 @@ namespace VMS.TPS//tiene que ser igual que el main
 
                     cureps.OptimizationSetup.AddAutomaticNormalTissueObjective(100.0f); //anade normal tissio automatico
                 }
-                progress = 45;
+                Progress = 45;
 
                 return cureps;
             }
@@ -771,7 +924,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                 //cureps.CalculateDVHEstimates(rapidplan[select], DVH_dose, DVH_struct);//ID DEL MODELO // DOSIS /MATCH STRUCTURA
 
                 //cureps.OptimizationSetup.AddAutomaticNormalTissueObjective(105.0f); //anade normal tissio automatico
-                progress = 50;
+                Progress = 50;
                 //foreach (KeyValuePair<string, string> x in DVH_struct) System.Windows.MessageBox.Show(x.Key + "_" + x.Value);
                 return cureps;
             }
@@ -800,7 +953,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                     }
                     cureps.OptimizationSetup.AddAutomaticNormalTissueObjective(105.0f); //anade normal tissio automatico
                 }
-                progress = 45;
+                Progress = 45;
                 return cureps;
             }
         }
@@ -811,7 +964,7 @@ namespace VMS.TPS//tiene que ser igual que el main
             Dictionary<string, DoseValue> DVH_dose = new Dictionary<string, DoseValue>();
             Dictionary<string, string> DVH_struct = new Dictionary<string, string>();
             bool is_rapidplan = true;
-            progress = 20;
+            Progress = 20;
             if (rapidplan[select].Contains("PROSTATA"))
             {
                 try
@@ -833,7 +986,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                         cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(x => x.Id.Contains("Bowel_PRV")), OptimizationObjectiveOperator.Upper, new DoseValue(27, "Gy"), 10, 100);
                     }
                     cureps.OptimizationSetup.AddAutomaticNormalTissueObjective(100.0f); //anade normal tissio automatico
-                    if (CalculateDose) opti_cureps(cureps);//calcula lo elemenal y la dosis
+                    if (CalculateDose) Opti_cureps(cureps);//calcula lo elemenal y la dosis
                 }
                 catch
                 {
@@ -841,7 +994,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                     if (rp == DialogResult.Cancel) return;
                     is_rapidplan = false;
                     SetDictionaries_Prost(out DVH_struct, out DVH_dose, cureps, PTVs_names, RxDose, is_rapidplan, rapidplan, select);//aqu queda los diccionarios de rapidplan
-                    if (CalculateDose) opti_cureps(cureps);//calcula lo elemenal y la dosis
+                    if (CalculateDose) Opti_cureps(cureps);//calcula lo elemenal y la dosis
                 }
                 Structure bowel = cureps.StructureSet.Structures.FirstOrDefault(x => x.Id == "Bowel");
                 if (cureps.StructureSet.Structures.Any(x => x.Id == "Bowel") && CalculateDose)
@@ -862,7 +1015,7 @@ namespace VMS.TPS//tiene que ser igual que el main
 
                         cureps.OptimizationSetup.AddPointObjective(bowel, OptimizationObjectiveOperator.Upper, new DoseValue(19.5, "Gy"), 10, Bowel_priority - 50);
                         cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(y => y.Id.Contains("Bowel_PRV")), OptimizationObjectiveOperator.Upper, new DoseValue(27, "Gy"), 10, Bowel_priority - 110);
-                        opti_cureps(cureps);//calcula lo elemenal y la dosis
+                        Opti_cureps(cureps);//calcula lo elemenal y la dosis
                         bowelDose = cureps.GetDoseAtVolume(bowel, 0, VolumePresentation.AbsoluteCm3, DoseValuePresentation.Absolute);
                     }
                 }
@@ -874,7 +1027,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                     SetDictionaries_Rect(out DVH_struct, out DVH_dose, cureps, PTVs_names, RxDose, is_rapidplan, rapidplan, select);//aqu queda los diccionarios de rapidplan
                     cureps.CalculateDVHEstimates(rapidplan[select], DVH_dose, DVH_struct);//ID DEL MODELO // DOSIS /MATCH STRUCTURA
                     cureps.OptimizationSetup.AddAutomaticNormalTissueObjective(105.0f); //anade normal tissio automatico
-                    if (CalculateDose) opti_cureps(cureps);//calcula lo elemenal y la dosis
+                    if (CalculateDose) Opti_cureps(cureps);//calcula lo elemenal y la dosis
                 }
                 catch
                 {
@@ -882,7 +1035,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                     if (rp == DialogResult.Cancel) return;
                     is_rapidplan = false;
                     SetDictionaries_Rect(out DVH_struct, out DVH_dose, cureps, PTVs_names, RxDose, is_rapidplan, rapidplan, select);//aqu queda los diccionarios de rapidplan
-                    if (CalculateDose) opti_cureps(cureps);//calcula lo elemenal y la dosis
+                    if (CalculateDose) Opti_cureps(cureps);//calcula lo elemenal y la dosis
                 }
             }
 
@@ -911,7 +1064,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                     cureps.OptimizationSetup.AddPointObjective(cureps.StructureSet.Structures.FirstOrDefault(x => N_Bowel.Any(s => s == x.Id)), OptimizationObjectiveOperator.Upper, new DoseValue(15, "Gy"), 0, 120);
                 }
                 cureps.OptimizationSetup.AddAutomaticNormalTissueObjective(115.0f);
-                if (CalculateDose) opti_cureps(cureps);//calcula lo elemenal y la dosis
+                if (CalculateDose) Opti_cureps(cureps);//calcula lo elemenal y la dosis
                 /*}
                 catch
                 {
@@ -922,7 +1075,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                     opti_cureps(cureps);//calcula lo elemenal y la dosis
                 }*/
             }
-            progress = 95;
+            Progress = 95;
         }
 
         public void Plan_Prostate_5Fx(ScriptContext context, bool points = false /*, System.Windows.Window window, ScriptEnvironment environment*/)
@@ -954,7 +1107,7 @@ namespace VMS.TPS//tiene que ser igual que el main
             string[] PTV_ID22 = { "PTV_Mid_2750" };
             Structure ptv_total = ss.Structures.FirstOrDefault(x => PTV_ID19.Any(s => s == x.Id));//ptv total
             Structure ptv_prvs = ss.Structures.FirstOrDefault(x => PTV_ID17.Any(s => s == x.Id));//ptv total
-            progress = 2;
+            Progress = 2;
 
             ///////////////////////puntos de referencia
             if (points)
@@ -986,7 +1139,7 @@ namespace VMS.TPS//tiene que ser igual que el main
             //list de oars importantes
             List<string[]> PTVs_names = new List<string[]>();//esto para pasar los nombres del ptvs que existen
                                                              /////////////////////////////////////////////////// Comienza la generacion de planes
-            progress = 4;
+            Progress = 4;
             if (result == DialogResult.Yes && result1 == DialogResult.No)
             {
                 if (!ss.Structures.Any(x => x.Id == PTV_ID20[0]))
@@ -997,9 +1150,16 @@ namespace VMS.TPS//tiene que ser igual que el main
                 PTVs_names.Add(PTV_ID20); PTVs_names.Add(PTV_ID17);
                 setting_names[1] = setting_names[1] + "Prostata";//rectum0 esto coloca el nombre mas 
 
-                ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 1);
-                if (question() == DialogResult.No) return;
-                Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0);
+                ExternalPlanSetup cureps = SettingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 1);
+                if (Question() == DialogResult.No)
+                {
+                    try
+                    {
+                        Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0);
+                    }
+                    catch (Exception) { }
+                    return;//pregunta si desea  continuar esto es para para parar en el arreglo
+                }
                 Normalization(cureps, ptv_prvs, RxDose, NFractions, 97);//normaliza al valor de ptv-prvs98%
             }
             else if (result == DialogResult.Yes && result1 == DialogResult.Yes)
@@ -1013,9 +1173,16 @@ namespace VMS.TPS//tiene que ser igual que el main
                 PTVs_names.Add(PTV_ID20); PTVs_names.Add(PTV_ID17); PTVs_names.Add(PTV_ID21);//los nombres de los ptvs
 
                 setting_names[1] = setting_names[1] + "Prost+GG";/////////
-                ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 2);
-                if (question() == DialogResult.No) return;
-                Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 1);
+                ExternalPlanSetup cureps = SettingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 2);
+                if (Question() == DialogResult.No)
+                {
+                    try
+                    {
+                        Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 1);
+                    }
+                    catch (Exception) { }
+                    return;//pregunta si desea  continuar esto es para para parar en el arreglo
+                } 
                 Normalization(cureps, ptv_prvs, RxDose, NFractions, 97);//normaliza al valor de ptv-prvs98%
             }
             else if (result == DialogResult.No && result1 == DialogResult.No)
@@ -1029,9 +1196,16 @@ namespace VMS.TPS//tiene que ser igual que el main
                 PTVs_names.Add(PTV_ID20_); PTVs_names.Add(PTV_ID17);
 
                 setting_names[1] = setting_names[1] + "Prostata";//rectum0
-                ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 1);
-                if (question() == DialogResult.No) return;
-                Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 2);
+                ExternalPlanSetup cureps = SettingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 1);
+                if (Question() == DialogResult.No)
+                {
+                    try
+                    {
+                        Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 2);
+                    }
+                    catch (Exception) { }
+                    return;//pregunta si desea  continuar esto es para para parar en el arreglo
+                }
                 Normalization(cureps, ptv_prvs, RxDose, NFractions, 97);//normaliza al valor de ptv-prvs98%             
             }
             else if (result == DialogResult.No && result1 == DialogResult.Yes)
@@ -1046,9 +1220,16 @@ namespace VMS.TPS//tiene que ser igual que el main
                 PTVs_names.Add(PTV_ID20_); PTVs_names.Add(PTV_ID17); PTVs_names.Add(PTV_ID21);
 
                 setting_names[1] = setting_names[1] + "Prost+GG";//rectum0
-                ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 2);
-                if (question() == DialogResult.No) return;
-                Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 3);
+                ExternalPlanSetup cureps = SettingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 2);
+                if (Question() == DialogResult.No)
+                {
+                    try
+                    {
+                        Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 3);
+                    }
+                    catch (Exception) { }
+                    return;//pregunta si desea  continuar esto es para para parar en el arreglo
+                }
                 Normalization(cureps, ptv_prvs, RxDose, NFractions, 97);//normaliza al valor de ptv-prvs98%
             }
             //ps.AddReferencePoint(ptv_total, ps.Dose.DoseMax3DLocation, "Calculus", null);//coloca punto de referencia no se como hacer que sea 
@@ -1106,11 +1287,11 @@ namespace VMS.TPS//tiene que ser igual que el main
             /////////////////////////////////////////////////////////////////////////Prescripcion siempre es de 5 fraction
             double RxDose = 54;//por defecto esta en 36.25
             int NFractions = 20;
-            string[] setting_names = { "Rectum", "Rectum", "Field", "6X", "ARC" };// 0=nombre del course y 1=del plan, 2=field, 3=energia, 4= srsarc o arc 5=rapidplan
+            string[] setting_names = { "Rectum", "Rectum", "Field", "10X", "ARC" };// 0=nombre del course y 1=del plan, 2=field, 3=energia, 4= srsarc o arc 5=rapidplan
             string[] rapidplan = { "RECTO_5400/4800" };
             Double[] setting_arc = { 30, 181, 179 };//por
             Double[] shift = { 0, 0, 0 };
-            int n_total = 1;
+            
             /////////////////////////////////////////////////////////////////////////////
             //list de oars importantes
             List<Structure> VIP_oar = new List<Structure>();
@@ -1129,18 +1310,29 @@ namespace VMS.TPS//tiene que ser igual que el main
 
                 PTVs_names.Add(PTV_54); PTVs_names.Add(PTV_48);
                 setting_names[1] = setting_names[1] + "20FX";//rectum0 esto coloca el nombre mas 
-                ExternalPlanSetup cureps = settingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 1);//c es un shift que sirve en prostata y quizas en otro mas pero aqui no
-                if (question() == DialogResult.No) return;
-                Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0);
+                ExternalPlanSetup cureps = SettingPlan(0, patient, ss, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 1);//c es un shift que sirve en prostata y quizas en otro mas pero aqui no
+                if (Question() == DialogResult.No)
+                {
+                    try
+                    {
+                        Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0);
+                    }
+                    catch (Exception) { }
+                    return;//pregunta si desea  continuar esto es para para parar en el arreglo
+                }
                 Normalization(cureps, gtv_54, RxDose, NFractions, 95);//normaliza al valor de gtv95%
             }
             else if (result == DialogResult.Yes)
             {
                 System.Windows.MessageBox.Show("Todavia no esta implementado, contactese con su desarrollador local");
             }
+            else if (result == DialogResult.Cancel)
+            {
+                System.Windows.MessageBox.Show("Todavia no esta implementado, contactese con su desarrollador local");
+            }
         }
 
-        public double Select(Structure s)//select volumen para mama
+        public static double Select(Structure s)//select volumen para mama
         {
             double select = 15;//comienza con eso estandar
             if (s == null)
@@ -1156,45 +1348,41 @@ namespace VMS.TPS//tiene que ser igual que el main
             return select;
         }
 
-        public DialogResult question()//pregunta para paraar en mitad antes de la optimizacion
+        public static DialogResult Question()//pregunta para paraar en mitad antes de la optimizacion
         {
             DialogResult desicion = System.Windows.Forms.MessageBox.Show("Desea continuar a la optimizacion", "Warning", MessageBoxButtons.YesNo);
             return desicion;
         } 
+        
         public void Plan_Mama(ScriptContext context, bool points = false /*, System.Windows.Window window, ScriptEnvironment environment*/)
         {
-
+            /////////////////////////////////////////Variables usuales en ESAPI
             Patient patient = context.Patient;
             //StructureSet ss = context.StructureSet;
             PlanSetup ps = context.PlanSetup;
-
             if (patient == null || context.StructureSet == null)
             {
                 System.Windows.MessageBox.Show("Please load a patient, 3D image, and structure set before running this script.", SCRIPT_NAME, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
-            
+            ///////////////////////////////////////////////CT y structureset con la que se trabajara
             string[] CT_name0 = { "CT_MODIFICADA", "modif", "MODIF", "CT_Modificada","CT MODIFICADA" };
             string[] CT_name1 = { "CT_ORIGINAL", "origin", "ORIGI", "CT_Original", "CT ORIGINAL" };
             //Image CT_ImModif = context.Image.Series.Images.FirstOrDefault(x => CT_name0.Any(s=>x.Id.Contains(s)));
-            //Image CT_ImOrig = context.Image.Series.Images.FirstOrDefault(x => CT_name0.Any(s => x.Id.Contains(s)));
-
+            //Image CT_ImOrig = context.Image.Series.Images.FirstOrDefault(x => CT_name0.Any(s => x.Id.Contains(s)))
             StructureSet CT_modificada = patient.StructureSets.FirstOrDefault(s => CT_name0.Any(x => s.Id.Contains(x)));
-            StructureSet CT_Original = patient.StructureSets.FirstOrDefault(s => CT_name1.Any(x => s.Id.Contains(x)));
-            
+            StructureSet CT_Original = patient.StructureSets.FirstOrDefault(s => CT_name1.Any(x => s.Id.Contains(x)));            
             if (CT_modificada == null || CT_Original == null)
             {
                 System.Windows.Forms.MessageBox.Show("Falta la CT modificada u original, revise los nombres, el Script no se ejecutara");
                 return;
             }
-
+            ////////////////////////////////////////////////DIOLOGO DE ELECCION DEL USUARIO
             //Que tipo de modelo se elige
             DialogResult tto = System.Windows.Forms.MessageBox.Show("Breast or Chest wall or Prosthesis?" + "\n" + "If Yes, the volume is Breast(Mama)." + "\n" + "If No, the volume is Chest wall(Pared)." + "\n" + "If Cancel, the volume is chestwall with expander(Expansor).", SCRIPT_NAME, MessageBoxButtons.YesNoCancel);
             DialogResult fraction = System.Windows.Forms.MessageBox.Show("Fraction: 16Fx or 20Fx?" + "\n" + "If Yes, the volume is 16Fx." + "\n" + "If No, the volume is 20Fx." + "\n" + "If Cancel, Stop Script", SCRIPT_NAME, MessageBoxButtons.YesNoCancel);
             if (fraction == DialogResult.Cancel) return;
-
-            
-                    ////////////////////////////////////////////////////////////////////////////
+                    //////////////////////////////////////////////////////////////////////////// ESTRUCURAS ESCENCIALES
             //Structures esenciales para correr el plan
             string[] mama_D = { "Mama_Der" };  //"PTV_52Gy"
             string[] mama_I = { "Mama_I" };  //"PTV_52Gy"
@@ -1215,7 +1403,7 @@ namespace VMS.TPS//tiene que ser igual que el main
             //Chest wall 20fx
             string[] PTV_ID25_ = { "zPTV_High_4700!" }; //PTV_47Gy//problema con el id
             string[] N_Bowel = { "Bowel", "bowels", "intestinos", "Intestino", "intestino", "Delgado" };
-            ////////////////////////////////puntos de referenica
+            ////////////////////////////////////puntos de referenica
             if (points)
             {
                 if (tto == DialogResult.Yes)//mama
@@ -1225,7 +1413,6 @@ namespace VMS.TPS//tiene que ser igual que el main
                         Reference_points(PTV_ID20, ps, 52, 3.25,true);//52
                         Reference_points(PTV_ID28, ps, 43.04, 2.69);//43
                         Reference_points(PTV_ID21, ps, 40, 2.5 );//41
-
                     }
                     if (fraction == DialogResult.No)//20
                     {
@@ -1233,7 +1420,6 @@ namespace VMS.TPS//tiene que ser igual que el main
                         Reference_points(PTV_ID28_, ps, 46, 2.3);//43
                         Reference_points(PTV_ID21_, ps, 43, 2.15);//41
                     }
-
                 }
                 if (tto == DialogResult.No || tto == DialogResult.Cancel)
                 {
@@ -1241,7 +1427,6 @@ namespace VMS.TPS//tiene que ser igual que el main
                     {
                         Reference_points(PTV_ID25, ps, 44, 2.75,true);//44
                         Reference_points(PTV_ID28, ps, 43.04, 2.69);//43
-
                     }
                     if (fraction == DialogResult.No)//20
                     {
@@ -1270,7 +1455,7 @@ namespace VMS.TPS//tiene que ser igual que el main
             string[] setting_names_pared = { "Pared_RA", "INICIO", "Field", "6X", "ARC" };
             string[] rapidplan_pared = { "PARED_SIMPLE_DERECHA_16Fx", "PARED_SIMPLE_IZQUIERDA_16Fx", "PARED_COMPLETA_DERECHA_16Fx", "PARED_COMPLETA_IZQUIERDA_16Fx", "PARED_SIMPLE_DERECHA_20Fx", "PARED_SIMPLE_IZQUIERDA_20Fx", "PARED_COMPLETA_DERECHA_20Fx", "PARED_COMPLETA_IZQUIERDA_20Fx" };
 
-            /////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////////oars
             //list de oars importantes
             List<string[]> PTVs_names = new List<string[]>();//esto para pasar los nombres del ptvs que existen
 
@@ -1297,10 +1482,14 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 20, 181, 60 };
                         shift = new double[] { 10, 20.0, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 2, true);
-                        if (question() == DialogResult.No)
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 2, true);
+                        if (Question() == DialogResult.No)
                         {
-                            Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0, false);
+                            try
+                            {
+                                Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0, false);
+                            }
+                            catch (Exception){}
                             return;//pregunta si desea  continuar esto es para para parar en el arreglo
                         }
                         else
@@ -1319,10 +1508,16 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 20, 300, 179 };
                         shift = new double[] { -10, 20.0, -5 };
                         shift[1] = Select(ptv_total);//esto para que cambie el valor de la altura segun el volumen de la mama
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 2, false);
-                        if (question() == DialogResult.No)
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 2, false);
+                        if (Question() == DialogResult.No)
                         {
-                            Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 1, false);
+                            try
+                            {
+                                Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 1, false);
+                            }
+                            catch (Exception)
+                            {
+                            }
                             return;//pregunta si desea  continuar esto es para para parar en el arreglo
                         }
                         else
@@ -1345,10 +1540,14 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 30, 181, 60 };
                         shift = new double[] { 20, 2, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 4, true);
-                        if (question() == DialogResult.No)
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 4, true);
+                        if (Question() == DialogResult.No)
                         {
-                            Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 2, false);
+                            try
+                            {
+                                Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 2, false);
+                            }
+                            catch (Exception){}
                             return;//pregunta si desea  continuar esto es para para parar en el arreglo
                         }
                         else
@@ -1367,10 +1566,16 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 30, 300, 179 };
                         shift = new double[] { -20, 20, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 4, false);
-                        if (question() == DialogResult.No)
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 4, false);
+                        if (Question() == DialogResult.No)
                         {
-                            Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 3, false);
+                            try
+                            {
+                                Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 3, false);
+                            }
+                            catch (Exception)
+                            {
+                            }
                             return;//pregunta si desea  continuar esto es para para parar en el arreglo
                         }
                         else
@@ -1395,10 +1600,16 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 20, 181, 60 };
                         shift = new double[] { 10, 20.0, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 2, true);
-                        if (question() == DialogResult.No)
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 2, true);
+                        if (Question() == DialogResult.No)
                         {
-                            Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 4, false);
+                            try
+                            {
+                                Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 4, false);
+                            }
+                            catch (Exception)
+                            {
+                            }
                             return;//pregunta si desea  continuar esto es para para parar en el arreglo
                         }
                         else
@@ -1417,10 +1628,14 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 20, 300, 179 };
                         shift = new double[] { -10, 20.0, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 2, false);
-                        if (question() == DialogResult.No)
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 2, false);
+                        if (Question() == DialogResult.No)
                         {
-                            Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 5, false);
+                            try
+                            {
+                                Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 5, false);
+                            }
+                            catch (Exception){}
                             return;//pregunta si desea  continuar esto es para para parar en el arreglo
                         }
                         else
@@ -1445,10 +1660,14 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 30, 181, 60 };
                         shift = new double[] { 20, 20.0, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 4, true);
-                        if (question() == DialogResult.No)
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 4, true);
+                        if (Question() == DialogResult.No)
                         {
-                            Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 6, false);
+                            try
+                            {
+                                Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 6, false);
+                            }
+                            catch (Exception){}
                             return;//pregunta si desea  continuar esto es para para parar en el arreglo
                         }
                         else
@@ -1467,8 +1686,8 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 30, 300, 179 };
                         shift = new double[] { -20, 20, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 4, false);
-                        if (question() == DialogResult.No)
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names, setting_arc, shift, 4, false);
+                        if (Question() == DialogResult.No)
                         {
                             Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 7, false);
                             return;//pregunta si desea  continuar esto es para para parar en el arreglo
@@ -1501,8 +1720,12 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 20, 181, 60 };
                         shift = new double[] { 10, 20.0, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 2, true);
-                        if (question() == DialogResult.No) return;//pregunta si desea  continuar esto es para para parar en el arreglo
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 2, true);
+                        if (Question() == DialogResult.Yes)
+                        {
+                            System.Windows.MessageBox.Show("Todavia no esta implementado, contactese con su desarrollador local");
+                            return;//pregunta si desea  continuar esto es para para parar en el arreglo
+                        }
                         //Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0);
                     }
                     else//izq SIMPLE
@@ -1516,8 +1739,12 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 20, 300, 179 };
                         shift = new double[] { -10, 20.0, -5 };
                         shift[1] = Select(ptv_total);//esto para que cambie el valor de la altura segun el volumen de la mama
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 2, false);
-                        if (question() == DialogResult.No) return;
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 2, false);
+                        if (Question() == DialogResult.Yes)
+                        {
+                            System.Windows.MessageBox.Show("Todavia no esta implementado, contactese con su desarrollador local");
+                            return;//pregunta si desea  continuar esto es para para parar en el arreglo
+                        }
                         //Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 1);
                     }
                 }
@@ -1537,8 +1764,8 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 30, 181, 60 };
                         shift = new double[] { 20, 2, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 4, true);
-                        if (question() == DialogResult.No) return;
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 4, true);
+                        if (Question() == DialogResult.No) return;
                         //Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 2);
                     }
                     else//izq completa
@@ -1552,8 +1779,12 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 30, 300, 179 };
                         shift = new double[] { -20, 20, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 4, false);
-                        if (question() == DialogResult.No) return;
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 4, false);
+                        if (Question() == DialogResult.Yes)
+                        {
+                            System.Windows.MessageBox.Show("Todavia no esta implementado, contactese con su desarrollador local");
+                            return;//pregunta si desea  continuar esto es para para parar en el arreglo
+                        }
                         //Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 3);
                     }
                 }
@@ -1573,8 +1804,12 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 20, 181, 60 };
                         shift = new double[] { 10, 20.0, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 2, true);
-                        if (question() == DialogResult.No) return;
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 2, true);
+                        if (Question() == DialogResult.Yes)
+                        {
+                            System.Windows.MessageBox.Show("Todavia no esta implementado, contactese con su desarrollador local");
+                            return;//pregunta si desea  continuar esto es para para parar en el arreglo
+                        }
                         //Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 4);
                     }
                     else//izq
@@ -1588,8 +1823,12 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 20, 300, 179 };
                         shift = new double[] { -10, 20.0, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 2, false);
-                        if (question() == DialogResult.No) return;
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 2, false);
+                        if (Question() == DialogResult.Yes)
+                        {
+                            System.Windows.MessageBox.Show("Todavia no esta implementado, contactese con su desarrollador local");
+                            return;//pregunta si desea  continuar esto es para para parar en el arreglo
+                        }
                         //Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 5);
                     }
                 }
@@ -1609,8 +1848,12 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 30, 181, 60 };
                         shift = new double[] { 20, 20.0, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 4, true);
-                        if (question() == DialogResult.No) return;
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 4, true);
+                        if (Question() == DialogResult.Yes)
+                        {
+                            System.Windows.MessageBox.Show("Todavia no esta implementado, contactese con su desarrollador local");
+                            return;//pregunta si desea  continuar esto es para para parar en el arreglo
+                        }
                         //Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 6);
                     }
                     else//izq completa
@@ -1624,18 +1867,18 @@ namespace VMS.TPS//tiene que ser igual que el main
                         setting_arc = new double[] { 30, 300, 179 };
                         shift = new double[] { -20, 20, -5 };
                         shift[1] = Select(ptv_total);
-                        cureps = settingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 4, false);
-                        if (question() == DialogResult.No) return;
+                        cureps = SettingPlanMama(0, patient, CT_modificada, RxDose, NFractions, ptv_total, setting_names_pared, setting_arc, shift, 4, false);
+                        if (Question() == DialogResult.Yes)
+                        {
+                            System.Windows.MessageBox.Show("Todavia no esta implementado, contactese con su desarrollador local");
+                            return;//pregunta si desea  continuar esto es para para parar en el arreglo
+                        }
                         //Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 7);
                     }
                 }
                 //ExternalPlanSetup newPlan = CreatePlan(cureps, CT_Original, plan_name, calculateDose: true);//genera el plan en original
                 //Normalization(newPlan, sib, RxDose, NFractions, 95);//normaliza al valor de ptv-prvs98%  
             }
-
-            
-
-
         }
 
         public static ExternalPlanSetup CreatePlan(ExternalPlanSetup cureps, StructureSet Set_Structures, string planId, bool calculateDose)
