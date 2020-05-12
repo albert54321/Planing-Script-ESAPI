@@ -1160,6 +1160,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                     catch (Exception) { }
                     return;//pregunta si desea  continuar esto es para para parar en el arreglo
                 }
+                else Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0);
                 Normalization(cureps, ptv_prvs, RxDose, NFractions, 97);//normaliza al valor de ptv-prvs98%
             }
             else if (result == DialogResult.Yes && result1 == DialogResult.Yes)
@@ -1182,7 +1183,8 @@ namespace VMS.TPS//tiene que ser igual que el main
                     }
                     catch (Exception) { }
                     return;//pregunta si desea  continuar esto es para para parar en el arreglo
-                } 
+                }
+                else Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 1);
                 Normalization(cureps, ptv_prvs, RxDose, NFractions, 97);//normaliza al valor de ptv-prvs98%
             }
             else if (result == DialogResult.No && result1 == DialogResult.No)
@@ -1206,6 +1208,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                     catch (Exception) { }
                     return;//pregunta si desea  continuar esto es para para parar en el arreglo
                 }
+                else Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 2);
                 Normalization(cureps, ptv_prvs, RxDose, NFractions, 97);//normaliza al valor de ptv-prvs98%             
             }
             else if (result == DialogResult.No && result1 == DialogResult.Yes)
@@ -1230,6 +1233,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                     catch (Exception) { }
                     return;//pregunta si desea  continuar esto es para para parar en el arreglo
                 }
+                else Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 3);
                 Normalization(cureps, ptv_prvs, RxDose, NFractions, 97);//normaliza al valor de ptv-prvs98%
             }
             //ps.AddReferencePoint(ptv_total, ps.Dose.DoseMax3DLocation, "Calculus", null);//coloca punto de referencia no se como hacer que sea 
@@ -1320,6 +1324,7 @@ namespace VMS.TPS//tiene que ser igual que el main
                     catch (Exception) { }
                     return;//pregunta si desea  continuar esto es para para parar en el arreglo
                 }
+                else Optimization_dose(cureps, rapidplan, PTVs_names, RxDose, 0);
                 Normalization(cureps, gtv_54, RxDose, NFractions, 95);//normaliza al valor de gtv95%
             }
             else if (result == DialogResult.Yes)
