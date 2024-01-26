@@ -82,7 +82,7 @@
         </StackPanel>
         <StackPanel Margin="326,330,-248,-181" Orientation="Horizontal" RenderTransformOrigin="0.457,0.532">
             <StackPanel.Background>
-                <ImageBrush x:Name="myBrush" ImageSource="Lib\Institutozunino.PNG" Stretch="Uniform" Opacity="0.8" ></ImageBrush>
+                <ImageBrush x:Name="myBrush" ImageSource="Lib\dynalog.png" Stretch="Uniform" Opacity="0.8" ></ImageBrush>
             </StackPanel.Background>
         </StackPanel>
         <StackPanel Margin="674,31,-531,-181"  Background="#FF6D6D74">
