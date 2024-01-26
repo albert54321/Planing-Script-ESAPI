@@ -87,9 +87,6 @@
     <Resource Include="Lib\paciencia.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Lib\Institutozunino.PNG" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Lib\dynalog-1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
